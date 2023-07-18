@@ -12,10 +12,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig{
 
+
+    //https://samori.tistory.com/64
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authz) ->
-                        authz.anyRequest().authenticated())
+        http.authorizeHttpRequests((authz) -> //인증?
+                        authz.anyRequest().authenticated()) // 인가
                 .formLogin(withDefaults());
 
         return http.build();
