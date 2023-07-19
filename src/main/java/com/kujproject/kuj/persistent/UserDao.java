@@ -1,6 +1,9 @@
 package com.kujproject.kuj.persistent;
 
-public class UserDao {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class UserDao{
     public void createUser() {
 
     };
