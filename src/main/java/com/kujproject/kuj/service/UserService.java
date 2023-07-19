@@ -1,12 +1,15 @@
 package com.kujproject.kuj.service;
 
 import com.kujproject.kuj.entity.User;
-import com.kujproject.kuj.persistent.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 public interface UserService {
-    public void createUser(User user);
-    public boolean login();
-    public boolean deleteUser();
-    // public boolean modifyUserInfo(User user);
+    public User createUser(User user);
+
+
+    public boolean deleteUser(String userId);
+
+    public User modifyUserInformation(User user);
+    public Optional<User> searchUserById(String id);
 }

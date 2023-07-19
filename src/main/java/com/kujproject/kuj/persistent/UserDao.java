@@ -1,12 +1,13 @@
 package com.kujproject.kuj.persistent;
 
 import com.kujproject.kuj.entity.User;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
 
-public interface UserDao extends Repository {
-    void save(User user);
-    Optional<User> findById(String id);
+public interface UserDao extends Repository<User, String> {
+    User save(User user);
+    Optional<User> findById(String userId);
     Optional<User> findByEmail(String email);
+    Optional<User> deleteById(String userId);
 }
