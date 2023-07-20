@@ -8,36 +8,47 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class PrincipalDetails implements UserDetails {
+//    private User user;
+//    public PrincipalDetails(User user) {
+//        this.user = user;
+//    }
 
-    private User user;
-    public PrincipalDetails(User user) {
-        this.user = user;
-    }
+    private String username;
+    private String password;
+    private boolean isEnabled;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentilasNonExpired;
+    private Collection<? extends GrantedAuthority> authorities;
 
 
 
     // 해당 유저의 권한 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // return type이 string 이므로, Collection<GrantedAuthority>에 넣어서 반환해 줌
-        Collection<GrantedAuthority> grantedAuthoritieslist = new ArrayList<>();
-        grantedAuthoritieslist.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return user.getRole();
-            }
-        });
-        return grantedAuthoritieslist;
+        return authorities;
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        authorities = authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassWord();
+        return password;
+    }
+
+    public void setPassword(String password) {
+        password = password;
     }
 
     @Override
     public String getUsername() {
-        return user.getName();
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     //===============       [추후 정의]       =================
@@ -59,5 +70,21 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        isAccountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentilasNonExpired(boolean credentilasNonExpired) {
+        isCredentilasNonExpired = credentilasNonExpired;
     }
 }
