@@ -4,18 +4,34 @@ import com.kujproject.kuj.domain.UserVo;
 import com.kujproject.kuj.entity.User;
 import com.kujproject.kuj.persistent.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserDao userDao;
+
     @Autowired
-    private UserVo userVo;
+    private PasswordEncoder passwordEncoder;
+
+
+
     @Override
-    public User createUser(User user) {
-        // passWord 암호화
-        return userDao.save(user);
+    public User createUser(UserVo userVo) {
+        // new 연산 권장?
+        User userEntity = new User();
+
+        userEntity.setUserId(userVo.getUserId());
+        userEntity.setPassWord(passwordEncoder.encode(userVo.getPassWord()));
+        userEntity.setEmail(userVo.getEmail());
+        userEntity.setName(userVo.getName());
+        userEntity.setPhone_num(userVo.getPhoneNum());
+        userEntity.setRole("ROLE_USER");
+
+        return userDao.save(userEntity);
     }
 
     @Override
