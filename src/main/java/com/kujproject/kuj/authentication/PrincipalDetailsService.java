@@ -33,7 +33,7 @@ public class PrincipalDetailsService implements UserDetailsService {
             User user = userEntity.get();
 
             PrincipalDetails principalDetails = new PrincipalDetails();
-            principalDetails.setUsername(user.getName());
+            principalDetails.setUsername(user.getUserName());
             principalDetails.setPassword(user.getPassWord());
 
             List<GrantedAuthority> authorities = new ArrayList<>();

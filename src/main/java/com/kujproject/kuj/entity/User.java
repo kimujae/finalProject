@@ -20,7 +20,7 @@ public class User{
     @NotEmpty(message = "비밀번호는 필수 항목입니다.")
     String passWord;
     @NotEmpty(message = "이름은 필수 항목입니다.")
-    String name;
+    String userName;
 
     @Column(unique = true)
     @Email(message = "유효한 이메일을 입력해주세요.")
@@ -30,10 +30,10 @@ public class User{
 
     String role;
 
-    public User(String userId, String passWord, String name, String email, String phone_num, String role){
+    public User(String userId, String passWord, String userName, String email, String phone_num, String role){
         this.userId = userId;
         this.passWord = passWord;
-        this.name = name;
+        this.userName = userName;
         this.email = email;
         this.phone_num = phone_num;
         this.role = role;

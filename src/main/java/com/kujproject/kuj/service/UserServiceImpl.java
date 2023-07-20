@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService{
         userEntity.setUserId(userVo.getUserId());
         userEntity.setPassWord(passwordEncoder.encode(userVo.getPassWord()));
         userEntity.setEmail(userVo.getEmail());
-        userEntity.setName(userVo.getName());
+        userEntity.setUserName(userVo.getName());
         userEntity.setPhone_num(userVo.getPhoneNum());
         userEntity.setRole("ROLE_USER");
 
