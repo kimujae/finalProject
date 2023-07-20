@@ -30,7 +30,7 @@ public class PrincipalDetails implements UserDetails {
     }
 
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        authorities = authorities;
+        this.authorities = authorities;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class PrincipalDetails implements UserDetails {
     }
 
     public void setPassword(String password) {
-        password = password;
+        this.password = password;
     }
 
     @Override
