@@ -18,7 +18,7 @@ public class User{
     @Id
     String userId;
     @NotEmpty(message = "비밀번호는 필수 항목입니다.")
-    String passWord;
+    String password;
     @NotEmpty(message = "이름은 필수 항목입니다.")
     String userName;
 
@@ -32,7 +32,7 @@ public class User{
 
     public User(String userId, String passWord, String userName, String email, String phone_num, String role){
         this.userId = userId;
-        this.passWord = passWord;
+        this.password = passWord;
         this.userName = userName;
         this.email = email;
         this.phone_num = phone_num;

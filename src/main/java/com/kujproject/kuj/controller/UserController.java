@@ -31,17 +31,20 @@ public class UserController {
 
     @GetMapping("/loginerror")
     public String loginerror(@RequestParam("login_error")String loginError){
-        return "users/loginerror";
+        return "/users/loginerror";
     }
 
     @GetMapping("/signinform")
     public String signinform(){
-        return "users/signinform";
+        return "/users/signinform";
     }
 
     // 사용자가 입력한 name, email, password가 member에 저장된다.
     @PostMapping("/signin")
     public String signin(@ModelAttribute UserVo userVo){
+        System.out.println(userVo.getUserId() + " "+ userVo.getUserName() + " "+ userVo.getPassword());
+        userVo.setRole("ROLE_USER");
+
         userService.createUser(userVo);
         return "redirect:/";
     }
@@ -52,6 +55,6 @@ public class UserController {
         User user = userService.searchUserById(loginId).get();
         modelMap.addAttribute("user", user);
 
-        return "users/userinfo";
+        return "/users/userinfo";
     }
 }

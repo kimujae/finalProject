@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,18 +24,21 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //UserDetails userDetails = new PrincipalDetails();
-        Optional<User> userEntity = userDao.findByUserName(username);
+        Optional<User> userEntity = userDao.findById(username);
 
         if(userEntity.isPresent()) {
             User user = userEntity.get();
 
             PrincipalDetails principalDetails = new PrincipalDetails();
-            principalDetails.setUsername(user.getUserName());
-            principalDetails.setPassword(user.getPassWord());
+            principalDetails.setUsername(user.getUserId());
+            principalDetails.setPassword(user.getPassword());
+
 
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(user.getRole()));
@@ -47,6 +51,8 @@ public class PrincipalDetailsService implements UserDetailsService {
             principalDetails.setAccountNonLocked(true);
             principalDetails.setCredentilasNonExpired(true);
 
+            System.out.println(user.getRole());
+            System.out.println(principalDetails.getAuthorities());
             return principalDetails;
         }
         return null;

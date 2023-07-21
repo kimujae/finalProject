@@ -3,8 +3,8 @@ package com.kujproject.kuj.domain;
 public class UserVo {
 
     private String userId;
-    private String passWord;
-    private String name;
+    private String password;
+    private String userName;
     private String email;
     private String phoneNum;
     private String role;
@@ -17,20 +17,20 @@ public class UserVo {
         this.userId = userId;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String passWord) {
+        this.password = passWord;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String name) {
+        this.userName = name;
     }
 
     public String getEmail() {

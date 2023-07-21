@@ -11,4 +11,5 @@ public interface UserDao extends Repository<User, String> {
     Optional<User> findByEmail(String email);
     Optional<User> deleteById(String userId);
     Optional<User> findByUserName(String userName);
+
 }
