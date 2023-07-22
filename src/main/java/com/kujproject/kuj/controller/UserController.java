@@ -1,7 +1,7 @@
 package com.kujproject.kuj.controller;
 
-import com.kujproject.kuj.domain.UserVo;
-import com.kujproject.kuj.entity.User;
+import com.kujproject.kuj.domain.user.UserVo;
+import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -52,8 +52,8 @@ public class UserController {
     @GetMapping("/userinfo")
     public String userInfo(Principal principal, ModelMap modelMap){
         String loginId = principal.getName();
-        User user = userService.searchUserById(loginId).get();
-        modelMap.addAttribute("user", user);
+        UserEntity userEntity = userService.searchUserById(loginId).get();
+        modelMap.addAttribute("user", userEntity);
 
         return "/users/userinfo";
     }

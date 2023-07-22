@@ -1,4 +1,4 @@
-package com.kujproject.kuj.domain;
+package com.kujproject.kuj.domain.user;
 
 public class UserVo {
 

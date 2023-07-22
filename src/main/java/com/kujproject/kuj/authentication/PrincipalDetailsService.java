@@ -1,7 +1,7 @@
 package com.kujproject.kuj.authentication;
 
-import com.kujproject.kuj.entity.User;
-import com.kujproject.kuj.persistent.UserDao;
+import com.kujproject.kuj.domain.user.UserEntity;
+import com.kujproject.kuj.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,10 +30,10 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //UserDetails userDetails = new PrincipalDetails();
-        Optional<User> userEntity = userDao.findById(username);
+        Optional<UserEntity> userEntity = userDao.findById(username);
 
         if(userEntity.isPresent()) {
-            User user = userEntity.get();
+            UserEntity user = userEntity.get();
 
             PrincipalDetails principalDetails = new PrincipalDetails();
             principalDetails.setUsername(user.getUserId());

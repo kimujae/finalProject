@@ -1,17 +1,17 @@
 package com.kujproject.kuj.service;
 
-import com.kujproject.kuj.domain.UserVo;
-import com.kujproject.kuj.entity.User;
+import com.kujproject.kuj.domain.user.UserVo;
+import com.kujproject.kuj.domain.user.UserEntity;
 
 import java.util.Optional;
 
 
 public interface UserService {
-    public User createUser(UserVo userVo);
+    public UserEntity createUser(UserVo userVo);
 
     public boolean deleteUser(String userId);
 
-    public User modifyUserInformation(User user);
+    public UserEntity modifyUserInformation(UserEntity userEntity);
 
-    public Optional<User> searchUserById(String id);
+    public Optional<UserEntity> searchUserById(String id);
 }

@@ -1,4 +1,4 @@
-package com.kujproject.kuj.entity;
+package com.kujproject.kuj.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User{
+public class UserEntity {
     @Id
     String userId;
     @NotEmpty(message = "비밀번호는 필수 항목입니다.")
@@ -30,7 +30,7 @@ public class User{
 
     String role;
 
-    public User(String userId, String passWord, String userName, String email, String phone_num, String role){
+    public UserEntity(String userId, String passWord, String userName, String email, String phone_num, String role){
         this.userId = userId;
         this.password = passWord;
         this.userName = userName;
