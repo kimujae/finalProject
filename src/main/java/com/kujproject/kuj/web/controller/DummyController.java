@@ -1,4 +1,4 @@
-package com.kujproject.kuj.controller;
+package com.kujproject.kuj.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

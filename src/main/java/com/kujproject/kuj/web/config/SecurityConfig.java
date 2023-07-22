@@ -1,4 +1,4 @@
-package com.kujproject.kuj.config;
+package com.kujproject.kuj.web.config;
 
 
 import lombok.RequiredArgsConstructor;

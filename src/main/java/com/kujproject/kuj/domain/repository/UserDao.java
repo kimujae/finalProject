@@ -1,4 +1,4 @@
-package com.kujproject.kuj.repository;
+package com.kujproject.kuj.domain.repository;
 
 import com.kujproject.kuj.domain.user.UserEntity;
 import org.springframework.data.repository.Repository;

@@ -1,4 +1,4 @@
-package com.kujproject.kuj.handler;
+package com.kujproject.kuj.web.handler;
 
 import java.io.IOException;
 

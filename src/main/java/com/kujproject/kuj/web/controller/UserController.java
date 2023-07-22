@@ -1,8 +1,8 @@
-package com.kujproject.kuj.controller;
+package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.user.UserVo;
 import com.kujproject.kuj.domain.user.UserEntity;
-import com.kujproject.kuj.service.UserService;
+import com.kujproject.kuj.domain.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

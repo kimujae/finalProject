@@ -1,7 +1,7 @@
 package com.kujproject.kuj.authentication;
 
 import com.kujproject.kuj.domain.user.UserEntity;
-import com.kujproject.kuj.repository.UserDao;
+import com.kujproject.kuj.domain.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,8 +1,8 @@
-package com.kujproject.kuj.service;
+package com.kujproject.kuj.domain.service;
 
 import com.kujproject.kuj.domain.user.UserVo;
 import com.kujproject.kuj.domain.user.UserEntity;
-import com.kujproject.kuj.repository.UserDao;
+import com.kujproject.kuj.domain.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
