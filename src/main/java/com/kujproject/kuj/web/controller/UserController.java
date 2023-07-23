@@ -52,6 +52,18 @@ public class UserController {
 
     }
 
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<Boolean> deleteUserById(@PathVariable String id) {
+        boolean isDeleted = userService.deleteUser(id);
+
+        if(isDeleted) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 //    @GetMapping("/loginform")
 //    public String loginform(){
