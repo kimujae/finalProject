@@ -4,8 +4,10 @@ import com.kujproject.kuj.domain.user.UserVo;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.service.UserService;
 import com.kujproject.kuj.dto.SignUpReqDto;
+import com.kujproject.kuj.dto.UserRespDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -32,10 +35,24 @@ public class UserController {
         
         userService.signUp(signUpReqDto);
         
-        return new ResponseEntity(signUpReqDto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(signUpReqDto);
     }
 
-    
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<UserRespDto> findUserById(@PathVariable String id) {
+        Optional<UserRespDto> foundUser = userService.findUserById(id);
+
+        if(foundUser != null) {
+            return ResponseEntity.ok().body(foundUser.get());
+        }
+        else {
+            return ResponseEntity.noContent().build();
+        }
+
+    }
+
+
 //    @GetMapping("/loginform")
 //    public String loginform(){
 //        return "users/loginform";

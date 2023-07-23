@@ -28,7 +28,7 @@ public class UserEntity {
     String email;
 
     @Column(unique = true)
-    String phone_num;
+    String phoneNum;
 
     String role;
 }

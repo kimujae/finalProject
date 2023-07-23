@@ -2,10 +2,7 @@ package com.kujproject.kuj.domain.service;
 
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
-import com.kujproject.kuj.dto.SignUpReqDto;
-import com.kujproject.kuj.dto.UpdateEmailReqDto;
-import com.kujproject.kuj.dto.UpdatePasswordReqDto;
-import com.kujproject.kuj.dto.UpdateProfileReqDto;
+import com.kujproject.kuj.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ public class UserServiceImpl implements UserService{
         userEntity.setPassword(passwordEncoder.encode(signUpReqDto.getPassword()));
         userEntity.setEmail(signUpReqDto.getEmail());
         userEntity.setUserName(signUpReqDto.getUserName());
-        userEntity.setPhone_num(signUpReqDto.getPhoneNum());
+        userEntity.setPhoneNum(signUpReqDto.getPhoneNum());
         userEntity.setRole("ROLE_USER");
 
         return userDao.save(userEntity);
@@ -40,8 +37,22 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public Optional<UserEntity> findUserById(String userId) {
-        return userDao.findById(userId);
+    public Optional<UserRespDto> findUserById(String userId) {
+        Optional<UserEntity> userEntity = userDao.findById(userId);
+
+        if(userEntity.isPresent()) {
+           UserRespDto userRespDto = new UserRespDto();
+
+           UserEntity user = userEntity.get();
+           userRespDto.setUserId(user.getUserId());
+           userRespDto.setEmail(user.getEmail());
+           userRespDto.setUserName(user.getUserName());
+           userRespDto.setPhoneNum(user.getPhoneNum());
+
+           return Optional.of(userRespDto);
+        }
+
+        return null;
     }
 
     @Override
