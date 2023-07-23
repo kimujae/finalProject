@@ -1,5 +1,7 @@
 package com.kujproject.kuj.dto;
 
+import com.kujproject.kuj.validation.user.EmailDupCheckValidator;
+import com.kujproject.kuj.validation.user.IdDupCheckValidator;
 import jakarta.persistence.Column;
 import lombok.Data;
 import javax.validation.constraints.Email;
@@ -8,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class SignUpReqDto {
     @Column(unique = true)
+    @IdDupCheckValidator
     @NotEmpty(message = "ID는 필수 항목입니다.")
     String userId;
 
@@ -21,6 +24,7 @@ public class SignUpReqDto {
     String userName;
 
     @Column(unique = true)
+    @EmailDupCheckValidator
     @Email(message = "유효한 이메일을 입력해주세요.")
     String email;
 
