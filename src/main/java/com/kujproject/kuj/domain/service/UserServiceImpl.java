@@ -56,4 +56,22 @@ public class UserServiceImpl implements UserService{
     public Optional<UserEntity> searchUserById(String userId) {
         return userDao.findById(userId);
     }
+
+    @Override
+    public boolean existByUserId(String userId) {
+        boolean isExistByUserId = false;
+        if(userDao.existsByUserId(userId) != null) {
+            isExistByUserId = true;
+        }
+        return isExistByUserId;
+    }
+
+    @Override
+    public boolean existByEmail(String email) {
+        boolean isExistByEmail = false;
+        if(userDao.existsByUserId(email) != null) {
+            isExistByEmail = true;
+        }
+        return isExistByEmail;
+    }
 }

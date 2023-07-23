@@ -14,4 +14,6 @@ public interface UserService {
     public UserEntity modifyUserInformation(UserEntity userEntity);
 
     public Optional<UserEntity> searchUserById(String id);
+    public boolean existByUserId(String userId);
+    public boolean existByEmail(String email);
 }
