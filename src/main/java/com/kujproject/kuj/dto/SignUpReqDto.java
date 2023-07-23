@@ -26,7 +26,7 @@ public class SignUpReqDto {
 
     @Column(unique = true)
     @NotEmpty(message = "전화번호는 필수 항목입니다.")
-    String phone_num;
+    String phoneNum;
 
     String role;
 }
