@@ -50,24 +50,30 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserEntity updateUserProfile(String userId, UpdateProfileReqDto updateProfileReqDto) {
+    public UpdateProfileReqDto updateUserProfile(String userId, UpdateProfileReqDto updateProfileReqDto) {
         UserEntity userEntity = userDao.findById(userId).get();
         userEntity.setUserName(updateProfileReqDto.getUserName());
-        return userDao.save(userEntity);
+
+        userDao.save(userEntity);
+        return updateProfileReqDto;
     }
 
     @Override
-    public UserEntity updateEmail(String userId, UpdateEmailReqDto updateEmailReqDto) {
+    public UpdateEmailReqDto updateEmail(String userId, UpdateEmailReqDto updateEmailReqDto) {
         UserEntity userEntity = userDao.findById(userId).get();
         userEntity.setEmail(updateEmailReqDto.getEmail());
-        return userDao.save(userEntity);
+
+        userDao.save(userEntity);
+        return updateEmailReqDto;
     }
 
     @Override
-    public UserEntity updatePassword(String userId, UpdatePasswordReqDto updatePasswordReqDto) {
+    public boolean updatePassword(String userId, UpdatePasswordReqDto updatePasswordReqDto) {
         UserEntity userEntity = userDao.findById(userId).get();
         userEntity.setEmail(updatePasswordReqDto.getPassword());
-        return userDao.save(userEntity);
+
+        userDao.save(userEntity);
+        return true;
     }
 
     @Override

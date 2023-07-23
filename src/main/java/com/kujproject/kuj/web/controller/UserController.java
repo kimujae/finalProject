@@ -3,11 +3,16 @@ package com.kujproject.kuj.web.controller;
 import com.kujproject.kuj.domain.user.UserVo;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.service.UserService;
+import com.kujproject.kuj.dto.SignUpReqDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
@@ -20,7 +25,17 @@ public class UserController {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
+    
+    @PostMapping("/user")
+    public ResponseEntity<SignUpReqDto> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto, BindingResult bindingResult) {
+        // bindingResult 에러 검출
+        
+        userService.signUp(signUpReqDto);
+        
+        return new ResponseEntity(signUpReqDto, HttpStatus.CREATED);
+    }
 
+    
 //    @GetMapping("/loginform")
 //    public String loginform(){
 //        return "users/loginform";
