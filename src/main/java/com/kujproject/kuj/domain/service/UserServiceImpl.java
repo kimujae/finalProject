@@ -1,6 +1,5 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.user.UserVo;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.SignUpReqDto;
