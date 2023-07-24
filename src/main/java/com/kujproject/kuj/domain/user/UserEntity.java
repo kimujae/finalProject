@@ -11,11 +11,12 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@Entity
+@Entity(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+
 public class UserEntity {
     @Id
     String userId;
