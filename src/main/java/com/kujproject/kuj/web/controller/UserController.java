@@ -39,7 +39,7 @@ public class UserController {
 
             return ResponseEntity.badRequest().body(errorMap);
         }
-        System.out.println(23321);
+
         userService.signUp(signUpReqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpReqDto);
     }
