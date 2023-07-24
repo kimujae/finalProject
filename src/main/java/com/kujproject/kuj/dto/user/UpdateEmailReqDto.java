@@ -1,4 +1,4 @@
-package com.kujproject.kuj.dto;
+package com.kujproject.kuj.dto.user;
 
 import com.kujproject.kuj.validation.user.EmailDupCheckValidator;
 import jakarta.persistence.Column;

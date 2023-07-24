@@ -1,15 +1,13 @@
 package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.UserService;
-import com.kujproject.kuj.dto.*;
-import com.kujproject.kuj.validation.user.IdDupCheckValidator;
+import com.kujproject.kuj.dto.user.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -62,7 +60,7 @@ public class UserController {
 
     @PatchMapping("/user/{id}/email")
     public ResponseEntity<?> updateEmail(@PathVariable String id,
-                                                         @Valid @RequestBody UpdateEmailReqDto updateEmailReqDto, BindingResult bindingResult) {
+                                         @Valid @RequestBody UpdateEmailReqDto updateEmailReqDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -80,7 +78,7 @@ public class UserController {
 
     @PatchMapping("/user/{id}/passwd")
     public ResponseEntity<?> updateEmail(@PathVariable String id,
-                                                            @Valid @RequestBody UpdatePasswordReqDto updatePasswordReqDto, BindingResult bindingResult) {
+                                         @Valid @RequestBody UpdatePasswordReqDto updatePasswordReqDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -104,7 +102,7 @@ public class UserController {
 
     @PatchMapping("/user/{id}/profile")
     public ResponseEntity<?> updateProfile(@PathVariable String id,
-                                                             @Valid @RequestBody UpdateProfileReqDto updateProfileReqDto, BindingResult bindingResult) {
+                                           @Valid @RequestBody UpdateProfileReqDto updateProfileReqDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();

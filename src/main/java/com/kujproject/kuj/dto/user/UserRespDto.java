@@ -1,4 +1,4 @@
-package com.kujproject.kuj.dto;
+package com.kujproject.kuj.dto.user;
 
 import lombok.Data;
 @Data

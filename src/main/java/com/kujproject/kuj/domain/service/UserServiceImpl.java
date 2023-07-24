@@ -2,8 +2,7 @@ package com.kujproject.kuj.domain.service;
 
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
-import com.kujproject.kuj.dto.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kujproject.kuj.dto.user.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +11,15 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
-    @Autowired
-    private UserDao userDao;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserDao userDao;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     //Dto로 해결

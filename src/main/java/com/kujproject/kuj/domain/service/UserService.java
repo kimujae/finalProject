@@ -1,8 +1,7 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.user.UserVo;
 import com.kujproject.kuj.domain.user.UserEntity;
-import com.kujproject.kuj.dto.*;
+import com.kujproject.kuj.dto.user.*;
 
 import java.util.List;
 import java.util.Optional;
