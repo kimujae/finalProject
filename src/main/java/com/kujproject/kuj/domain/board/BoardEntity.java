@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BoardEntity {
+public class BoardEntity{
     @Id
     Long boardId;
     String title;
