@@ -5,7 +5,7 @@ import lombok.Data;
 
 
 @Data
-public class UpdatePasswordReqDto {
+public class UpdatePasswordDto {
     //EqualsField적용 해야함.
     @NotEmpty(message = "비밀번호는 필수 항목입니다.")
     String password;

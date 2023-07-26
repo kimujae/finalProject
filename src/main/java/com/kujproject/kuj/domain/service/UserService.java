@@ -14,11 +14,11 @@ public interface UserService {
 
     public Optional<List<UserEntity>> findAllUser();
 
-    UpdateProfileReqDto updateUserProfile(String userId, UpdateProfileReqDto updateProfileReqDto);
+    UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto);
 
-    UpdateEmailReqDto updateEmail(String userId, UpdateEmailReqDto updateEmailReqDto);
+    UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto);
 
-    boolean updatePassword(String userId, UpdatePasswordReqDto updatePasswordReqDto);
+    boolean updatePassword(String userId, UpdatePasswordDto updatePasswordDto);
 
     public boolean deleteUser(String userId);
 

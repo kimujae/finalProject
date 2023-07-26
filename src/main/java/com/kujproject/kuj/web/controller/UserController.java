@@ -60,7 +60,7 @@ public class UserController {
 
     @PatchMapping("/user/{id}/email")
     public ResponseEntity<?> updateEmail(@PathVariable String id,
-                                         @Valid @RequestBody UpdateEmailReqDto updateEmailReqDto, BindingResult bindingResult) {
+                                         @Valid @RequestBody UpdateEmailDto updateEmailDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -72,13 +72,13 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        userService.updateEmail(id, updateEmailReqDto);
-        return ResponseEntity.ok().body(updateEmailReqDto);
+        userService.updateEmail(id, updateEmailDto);
+        return ResponseEntity.ok().body(updateEmailDto);
     }
 
     @PatchMapping("/user/{id}/passwd")
     public ResponseEntity<?> updateEmail(@PathVariable String id,
-                                         @Valid @RequestBody UpdatePasswordReqDto updatePasswordReqDto, BindingResult bindingResult) {
+                                         @Valid @RequestBody UpdatePasswordDto updatePasswordDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -90,10 +90,10 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        boolean isUpdated = userService.updatePassword(id,updatePasswordReqDto);
+        boolean isUpdated = userService.updatePassword(id, updatePasswordDto);
 
         if(isUpdated) {
-            return ResponseEntity.ok().body(updatePasswordReqDto);
+            return ResponseEntity.ok().body(updatePasswordDto);
         }
         else {
             return ResponseEntity.badRequest().build();
@@ -102,7 +102,7 @@ public class UserController {
 
     @PatchMapping("/user/{id}/profile")
     public ResponseEntity<?> updateProfile(@PathVariable String id,
-                                           @Valid @RequestBody UpdateProfileReqDto updateProfileReqDto, BindingResult bindingResult) {
+                                           @Valid @RequestBody UpdateProfileDto updateProfileDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -114,8 +114,8 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        userService.updateUserProfile(id, updateProfileReqDto);
-        return ResponseEntity.ok().body(updateProfileReqDto);
+        userService.updateUserProfile(id, updateProfileDto);
+        return ResponseEntity.ok().body(updateProfileDto);
     }
 
 
