@@ -1,7 +1,9 @@
 package com.kujproject.kuj.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -21,9 +23,10 @@ public class BoardEntity{
     @Id
     Long boardId;
     String title;
-    String isPublic;
+    boolean isPublic;
 
-    // member , list, starred 와 연관관계 선언
-    @OneToMany(mappedBy = "board")
-    List<Board_UserEntity> boards = new ArrayList<>();
+//     member , list, starred 와 연관관계 선언
+    @OneToMany(mappedBy = "board" , fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<Board_UserEntity> users = new ArrayList<>();
 }
