@@ -1,13 +1,14 @@
 package com.kujproject.kuj.domain.service;
 
+import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.dto.board.*;
 
 public interface BoardService {
     BoardRespDto findBoardByBoardId(Long boardId);
-    BoardRespDto createNewBoard(CreateBoardReqDto createBoardReqDto);
+    BoardEntity createNewBoard(CreateBoardReqDto createBoardReqDto);
     boolean deleteBoard(Long boardId);
-    UpdateBoardCoverDto updateCover(String cover);
-    UpdateBoardPubRangeDto updatePubRange(boolean pubRange);
-    UpdateBoardTitleDto updateTitle(String title);
+    UpdateBoardCoverDto updateCover(Long boardId, UpdateBoardCoverDto updateBoardCoverDto);
+    UpdateBoardPubRangeDto updatePubRange(Long boardId, UpdateBoardPubRangeDto updateBoardPubRangeDto);
+    UpdateBoardTitleDto updateTitle(Long boardId, UpdateBoardTitleDto updateBoardTitleDto);
 
 }

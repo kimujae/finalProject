@@ -2,10 +2,7 @@ package com.kujproject.kuj.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +18,10 @@ import java.util.List;
 @Setter
 public class BoardEntity{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long boardId;
     String title;
+    String cover;
     boolean isPublic;
 
 //     member , list, starred 와 연관관계 선언
