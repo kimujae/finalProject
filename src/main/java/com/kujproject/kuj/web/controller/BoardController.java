@@ -1,10 +1,8 @@
 package com.kujproject.kuj.web.controller;
 
 
-import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.domain.service.BoardService;
 import com.kujproject.kuj.dto.board.*;
-import com.kujproject.kuj.dto.user.UpdateProfileDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 public class BoardController {
