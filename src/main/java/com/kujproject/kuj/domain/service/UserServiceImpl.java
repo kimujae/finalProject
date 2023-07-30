@@ -1,11 +1,14 @@
 package com.kujproject.kuj.domain.service;
 
+import com.kujproject.kuj.domain.board.BoardEntity;
+import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.user.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +58,21 @@ public class UserServiceImpl implements UserService{
            return Optional.of(userRespDto);
         }
 
+        return null;
+    }
+
+    @Override
+    public List<BoardEntity> findUsersBoard(String id) {
+        List<BoardEntity> boards = new ArrayList<>();
+        Optional<UserEntity> foundUser = userDao.findById(id);
+
+        if(foundUser.isPresent()) {
+            UserEntity user = foundUser.get();
+            for(Board_UserEntity board : user.getBoards()) {
+                boards.add(board.getBoard());
+            }
+            return boards;
+        }
         return null;
     }
 

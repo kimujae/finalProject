@@ -2,6 +2,7 @@ package com.kujproject.kuj.web.controller;
 
 
 import com.kujproject.kuj.domain.service.BoardService;
+import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.board.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -41,6 +43,7 @@ public class BoardController {
 
         return ResponseEntity.ok().body(createBoardReqDto); // respDto로 반환?
     }
+
 
     @GetMapping("/board/{id}")
     public ResponseEntity<?> findBoardByBoardId(@PathVariable Long id) {

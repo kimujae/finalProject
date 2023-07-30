@@ -55,7 +55,6 @@ public class UserController {
         else {
             return ResponseEntity.noContent().build();
         }
-
     }
 
     @PatchMapping("/user/{id}/email")
