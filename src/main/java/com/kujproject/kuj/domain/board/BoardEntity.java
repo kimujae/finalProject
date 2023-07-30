@@ -1,4 +1,4 @@
-package com.kujproject.kuj.domain.user;
+package com.kujproject.kuj.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
@@ -11,25 +11,21 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity(name = "user")
+@Entity(name = "board")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class UserEntity {
+public class BoardEntity{
     @Id
-    String userId;
-    String password;
-    String userName;
-    @Column(unique = true)
-    String email;
-    @Column(unique = true)
-    String phoneNum;
-    String role;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long boardId;
+    String title;
+    String cover;
+    boolean isPublic;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//     member , list, starred 와 연관관계 선언
+    @OneToMany(mappedBy = "board" , fetch = FetchType.LAZY)
     @JsonManagedReference
-    List<Board_UserEntity> boards = new ArrayList<>();
+    List<Board_UserEntity> users = new ArrayList<>();
 }

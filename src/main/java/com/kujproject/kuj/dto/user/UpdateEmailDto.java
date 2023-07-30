@@ -7,7 +7,7 @@ import lombok.Data;
 
 
 @Data
-public class UpdateEmailReqDto {
+public class UpdateEmailDto {
     @Column(unique = true)
     @Email(message = "유효한 이메일을 입력해주세요.")
     @EmailDupCheckValidator

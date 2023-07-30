@@ -1,11 +1,14 @@
 package com.kujproject.kuj.domain.service;
 
+import com.kujproject.kuj.domain.board.BoardEntity;
+import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.user.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,32 +62,47 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<BoardEntity> findUsersBoard(String id) {
+        List<BoardEntity> boards = new ArrayList<>();
+        Optional<UserEntity> foundUser = userDao.findById(id);
+
+        if(foundUser.isPresent()) {
+            UserEntity user = foundUser.get();
+            for(Board_UserEntity board : user.getBoards()) {
+                boards.add(board.getBoard());
+            }
+            return boards;
+        }
+        return null;
+    }
+
+    @Override
     public Optional<List<UserEntity>> findAllUser() {
         return Optional.empty();
     }
 
     @Override
-    public UpdateProfileReqDto updateUserProfile(String userId, UpdateProfileReqDto updateProfileReqDto) {
+    public UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto) {
         UserEntity userEntity = userDao.findById(userId).get();
-        userEntity.setUserName(updateProfileReqDto.getUserName());
+        userEntity.setUserName(updateProfileDto.getUserName());
 
         userDao.save(userEntity);
-        return updateProfileReqDto;
+        return updateProfileDto;
     }
 
     @Override
-    public UpdateEmailReqDto updateEmail(String userId, UpdateEmailReqDto updateEmailReqDto) {
+    public UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto) {
         UserEntity userEntity = userDao.findById(userId).get();
-        userEntity.setEmail(updateEmailReqDto.getEmail());
+        userEntity.setEmail(updateEmailDto.getEmail());
 
         userDao.save(userEntity);
-        return updateEmailReqDto;
+        return updateEmailDto;
     }
 
     @Override
-    public boolean updatePassword(String userId, UpdatePasswordReqDto updatePasswordReqDto) {
+    public boolean updatePassword(String userId, UpdatePasswordDto updatePasswordDto) {
         UserEntity userEntity = userDao.findById(userId).get();
-        userEntity.setEmail(updatePasswordReqDto.getPassword());
+        userEntity.setEmail(updatePasswordDto.getPassword());
 
         userDao.save(userEntity);
         return true;

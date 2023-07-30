@@ -1,5 +1,6 @@
 package com.kujproject.kuj.domain.service;
 
+import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.user.*;
 
@@ -10,19 +11,20 @@ import java.util.Optional;
 public interface UserService {
     UserEntity signUp(SignUpReqDto signUpReqDto);
 
-    public Optional<UserRespDto> findUserById(String id);
+    Optional<UserRespDto> findUserById(String id);
 
-    public Optional<List<UserEntity>> findAllUser();
+    List<BoardEntity>findUsersBoard(String id);
+    Optional<List<UserEntity>> findAllUser();
 
-    UpdateProfileReqDto updateUserProfile(String userId, UpdateProfileReqDto updateProfileReqDto);
+    UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto);
 
-    UpdateEmailReqDto updateEmail(String userId, UpdateEmailReqDto updateEmailReqDto);
+    UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto);
 
-    boolean updatePassword(String userId, UpdatePasswordReqDto updatePasswordReqDto);
+    boolean updatePassword(String userId, UpdatePasswordDto updatePasswordDto);
 
-    public boolean deleteUser(String userId);
+    boolean deleteUser(String userId);
 
-    public boolean existByUserId(String userId);
+    boolean existByUserId(String userId);
 
-    public boolean existByEmail(String email);
+    boolean existByEmail(String email);
 }
