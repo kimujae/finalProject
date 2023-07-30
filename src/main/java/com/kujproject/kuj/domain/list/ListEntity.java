@@ -21,5 +21,5 @@ public class ListEntity {
 
     @ManyToOne
     @JoinColumn(name = "board_id")
-    BoardEntity boardEntity;
+    BoardEntity board;
 }

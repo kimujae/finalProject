@@ -36,10 +36,18 @@ public class ListServiceImpl implements ListService{
 
     @Override
     public List<ListEntity> findAllListByBoardId(Long boardId) {
-        Optional<List<ListEntity>> lists = listDao.findAllByBoardId(boardId);
-        if(lists.isPresent()) {
-            return lists.get();
+
+        Optional<BoardEntity> board = boardDao.findByBoardId(boardId);
+        if(board.isPresent()) {
+            Optional<List<ListEntity>> lists = listDao.findAllByBoard(board.get());
+
+            if(lists.isPresent()) {
+                return lists.get();
+            }
+
         }
+
+
         return null;
     }
 
@@ -78,7 +86,7 @@ public class ListServiceImpl implements ListService{
         if(board.isPresent()) {
             list.setTitle(createListReqDto.getListTitle());
             list.setListOrder(createListReqDto.getListOrder());
-            list.setBoardEntity(board.get());
+            list.setBoard(board.get());
             listDao.save(list);
 
             ListRespDto listResp = new ListRespDto();
