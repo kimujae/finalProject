@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name ="list")
 public class ListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

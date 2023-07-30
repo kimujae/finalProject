@@ -26,7 +26,7 @@ public class ListController {
 
     @PostMapping("/board/{id}/list")
     public ResponseEntity<?> createList(
-            @Valid @RequestBody CreateListReqDto createListReqDto, @PathVariable Long id, BindingResult bindingResult) {
+            @Valid @RequestBody CreateListReqDto createListReqDto, @PathVariable Long id,  BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -43,8 +43,8 @@ public class ListController {
     }
 
     @GetMapping("/board/{id}/list")
-    public ResponseEntity<List<ListRespDto>> findAllListByBoardId(@PathVariable Long boardId) {
-        List<ListEntity> lists = listService.findAllListByBoardId(boardId);
+    public ResponseEntity<List<ListRespDto>> findAllListByBoardId(@PathVariable Long id) {
+        List<ListEntity> lists = listService.findAllListByBoardId(id);
         List<ListRespDto> listsResp = new ArrayList<>();
 
         for(ListEntity list : lists) {
@@ -60,9 +60,9 @@ public class ListController {
 
 
     @GetMapping("/list/{id}")
-    public ResponseEntity<ListRespDto> findListById(@PathVariable Long listId) {
+    public ResponseEntity<ListRespDto> findListById(@PathVariable Long id) {
         ListRespDto listResp = new ListRespDto();
-        ListEntity listEntity = listService.findListByListID(listId);
+        ListEntity listEntity = listService.findListByListID(id);
 
         listResp.setListOrder(listEntity.getListOrder());
         listResp.setTitle(listResp.getTitle());

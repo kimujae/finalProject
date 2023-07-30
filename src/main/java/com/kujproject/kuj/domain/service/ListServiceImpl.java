@@ -47,7 +47,6 @@ public class ListServiceImpl implements ListService{
 
         }
 
-
         return null;
     }
 
@@ -84,7 +83,7 @@ public class ListServiceImpl implements ListService{
 
 
         if(board.isPresent()) {
-            list.setTitle(createListReqDto.getListTitle());
+            list.setTitle(createListReqDto.getTitle());
             list.setListOrder(createListReqDto.getListOrder());
             list.setBoard(board.get());
             listDao.save(list);

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CreateListReqDto {
-    String listTitle;
+    String title;
     int listOrder;
     //board_id 넣어줘야하나?
 }
