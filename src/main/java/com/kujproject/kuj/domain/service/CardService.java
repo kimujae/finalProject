@@ -14,7 +14,7 @@ public interface CardService {
         4. 카드 읽어오기
         5. 리스트의 카드들 모두 가져오기
      */
-    CardRespDto createCard(CreateCardReqDto createCardReqDto);
+    CardRespDto createCard(CreateCardReqDto createCardReqDto, Long listId);
     UpdateCardCoverReqDto updateCover(UpdateCardCoverReqDto updateCardCoverReqDto, Long cardId);
     UpdateCardDescReqDto updateDescription(UpdateCardDescReqDto updateCardDescReqDto, Long cardId);
     UpdateCardLabelReqDto updateLabel(UpdateCardLabelReqDto updateCardLabelReqDto, Long cardId);
