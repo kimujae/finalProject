@@ -36,8 +36,8 @@ public class CardController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        CardRespDto cardRespDto = cardService.createCard(createCardReqDto, id);
-        return ResponseEntity.ok().body(cardRespDto);
+        createCardReqDto  = cardService.createCard(createCardReqDto, id);
+        return ResponseEntity.ok().body(createCardReqDto);
     }
 
     @GetMapping("/list/{id}/card")

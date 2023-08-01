@@ -24,7 +24,7 @@ public class CardServiceImpl implements CardService{
 
 
     @Override
-    public CardRespDto createCard(CreateCardReqDto createCardReqDto, Long listId) {
+    public CreateCardReqDto createCard(CreateCardReqDto createCardReqDto, Long listId) {
         CardEntity card = new CardEntity();
         Optional<ListEntity> listEntity = listDao.findByListId(listId);
 
@@ -34,6 +34,8 @@ public class CardServiceImpl implements CardService{
             card.setTitle(createCardReqDto.getTitle());
 
             cardDao.save(card);
+
+            return createCardReqDto;
         }
         // 리스트의 카드 사이즈를 가져와서 순서를 지정해야한다.
         //card.setCardOrder();
