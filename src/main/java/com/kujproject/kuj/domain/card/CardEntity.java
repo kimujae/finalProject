@@ -1,5 +1,6 @@
 package com.kujproject.kuj.domain.card;
 
+import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -32,5 +34,10 @@ public class CardEntity {
     @ManyToOne
     @JoinColumn(name = "list_id")
     ListEntity list;
+
+    @OneToMany (mappedBy = "card")
+    List<ChecklistEntity> checklist;
+
+
 
 }
