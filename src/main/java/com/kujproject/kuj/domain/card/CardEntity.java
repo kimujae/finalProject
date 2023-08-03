@@ -35,7 +35,7 @@ public class CardEntity {
     @JoinColumn(name = "list_id")
     ListEntity list;
 
-    @OneToMany (mappedBy = "card")
+    @OneToMany (mappedBy = "card", fetch = FetchType.LAZY)
     List<ChecklistEntity> checklist;
 
 
