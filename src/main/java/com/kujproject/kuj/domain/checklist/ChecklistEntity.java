@@ -26,6 +26,6 @@ public class ChecklistEntity {
     @JoinColumn(name = "card_id")
     CardEntity card;
 
-    @OneToMany(mappedBy = "checklist")
+    @OneToMany(mappedBy = "checklist", fetch = FetchType.LAZY)
     List<TodoCheckEntity> check;
 }

@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Table(name ="todo_check")
 public class TodoCheckEntity {
     @Id
-    Long check_id;
+    Long checkId;
     String title;
     LocalDate duedate;
     boolean isCompleted;
