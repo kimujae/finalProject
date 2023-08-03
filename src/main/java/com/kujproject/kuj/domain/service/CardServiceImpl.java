@@ -1,6 +1,7 @@
 package com.kujproject.kuj.domain.service;
 
 import com.kujproject.kuj.domain.card.CardEntity;
+import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.domain.repository.CardDao;
 import com.kujproject.kuj.domain.repository.ListDao;
@@ -213,6 +214,20 @@ public class CardServiceImpl implements CardService{
             cardRespDto.setTitle(card.getTitle());
 
             return cardRespDto;
+        }
+        return null;
+    }
+
+    @Override
+    public List<ChecklistEntity> findAllChecklistByCardId(Long cardId) {
+        List<ChecklistEntity> checklistEntityList;
+
+        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+        if(cardEntity.isPresent()) {
+            CardEntity card = cardEntity.get();
+
+            checklistEntityList = card.getChecklist();
+            return checklistEntityList;
         }
         return null;
     }
