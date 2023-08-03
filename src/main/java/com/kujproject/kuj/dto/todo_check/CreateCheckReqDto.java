@@ -5,8 +5,9 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class CreateCheck {
+public class CreateCheckReqDto {
     String title;
     LocalDate duedate;
     boolean isCompleted;
+    String userId;
 }
