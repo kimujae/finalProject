@@ -1,8 +1,8 @@
-package com.kujproject.kuj.domain.card;
+package com.kujproject.kuj.domain.todo_check;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
-import com.kujproject.kuj.domain.list.ListEntity;
+import com.kujproject.kuj.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,34 +10,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "card")
-public class CardEntity {
+@Table(name ="todo_check")
+public class TodoCheckEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cardId;
+    Long checkId;
     String title;
-    @Lob
-    String description;
-    String label;
-    String cover;
-    int cardOrder;
-    String attachmentPath;
-    LocalDate startdate;
     LocalDate duedate;
+    boolean isCompleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "list_id")
+    @ManyToOne
+    @JoinColumn(name = "checklist_id")
     @JsonManagedReference
-    ListEntity list;
+    ChecklistEntity checklist;
 
-    @OneToMany (mappedBy = "card", fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @JsonManagedReference
-    List<ChecklistEntity> checklist;
+    UserEntity user;
 }
