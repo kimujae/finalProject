@@ -6,10 +6,7 @@ import com.kujproject.kuj.domain.repository.TodoCheckDao;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
-import com.kujproject.kuj.dto.todo_check.CreateCheckReqDto;
-import com.kujproject.kuj.dto.todo_check.UpdateCompletedReqDto;
-import com.kujproject.kuj.dto.todo_check.UpdateDateReqDto;
-import com.kujproject.kuj.dto.todo_check.UpdateTitleReqDto;
+import com.kujproject.kuj.dto.todo_check.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -94,6 +91,23 @@ public class TodoCheckServiceImpl implements TodoCheckService{
             check.setTitle(updateTitleReqDto.getTitle());
             todoCheckDao.save(check);
             return updateTitleReqDto;
+        }
+        return null;
+    }
+
+    @Override
+    public CheckRespDto findCheckById(Long checkId) {
+        Optional<TodoCheckEntity> todoCheckEntity = todoCheckDao.findTodoCheckEntityByCheckId(checkId);
+
+        if(todoCheckEntity.isPresent()) {
+            TodoCheckEntity todoCheck = todoCheckEntity.get();
+
+            CheckRespDto checkRespDto = new CheckRespDto();
+            checkRespDto.setCompleted(todoCheck.isCompleted());
+            checkRespDto.setDuedate(todoCheck.getDuedate());
+            checkRespDto.setTitle(todoCheck.getTitle());
+
+            return checkRespDto;
         }
         return null;
     }
