@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ChecklistDao extends Repository<ChecklistEntity, String> {
     ChecklistEntity save(ChecklistEntity checklist);
-    ChecklistEntity deleteByChecklistId(Long checklistId);
+    int deleteByChecklistId(Long checklistId);
     Optional<ChecklistEntity> findChecklistEntityByChecklistId(Long checklistId);
 }

@@ -4,11 +4,15 @@ import com.kujproject.kuj.domain.card.CardEntity;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.repository.CardDao;
 import com.kujproject.kuj.domain.repository.ChecklistDao;
+import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
+import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.checklist.CreateChecklistReqDto;
 import com.kujproject.kuj.dto.checklist.UpdateProgressReqDto;
 import com.kujproject.kuj.dto.checklist.UpdateTitleReqDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -34,6 +38,7 @@ public class ChecklistServiceImpl implements ChecklistService{
             checklist.setTitle(createChecklistReqDto.getTitle());
             checklist.setCard(card);
 
+            checklistDao.save(checklist);
             return createChecklistReqDto;
         }
         return null;
@@ -68,8 +73,39 @@ public class ChecklistServiceImpl implements ChecklistService{
     }
 
     @Override
+    @Transactional
     public boolean deleteChecklistById(Long checklistId) {
-        ChecklistEntity checklistEntity = checklistDao.deleteByChecklistId(checklistId);
+        int deletedEntityCount = checklistDao.deleteByChecklistId(checklistId);
         return true;
+    }
+
+    @Override
+    public ChecklistRespDto findChecklistById(Long checklistId) {
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+
+        if(checklistEntity.isPresent()) {
+            ChecklistEntity checklist = checklistEntity.get();
+
+            ChecklistRespDto checklistRespDto = new ChecklistRespDto();
+            checklistRespDto.setTitle(checklist.getTitle());
+            checklistRespDto.setProgress(checklist.getProgress());
+
+            checklistDao.save(checklist);
+            return checklistRespDto;
+        }
+        return null;
+    }
+
+    @Override
+    public List<TodoCheckEntity> findAllCheckByChecklistID(Long checklistId) {
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+
+        if(checklistEntity.isPresent()) {
+            ChecklistEntity checklist = checklistEntity.get();
+
+            List<TodoCheckEntity> todoCheckList = checklist.getCheck();
+            return todoCheckList;
+        }
+        return null;
     }
 }
