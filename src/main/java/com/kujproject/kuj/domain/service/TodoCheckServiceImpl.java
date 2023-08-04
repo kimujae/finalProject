@@ -8,6 +8,7 @@ import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.todo_check.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -41,6 +42,8 @@ public class TodoCheckServiceImpl implements TodoCheckService{
                 todoCheck.setDuedate(createCheckReqDto.getDuedate());
                 todoCheck.setCompleted(createCheckReqDto.isCompleted());
                 todoCheck.setUser(user);
+
+                todoCheckDao.save(todoCheck);
                 return createCheckReqDto;
             }
         }
@@ -48,8 +51,9 @@ public class TodoCheckServiceImpl implements TodoCheckService{
     }
 
     @Override
+    @Transactional
     public boolean deleteCheckById(Long checkId) {
-        todoCheckDao.deleteByCheckId(checkId);
+        int deletedEntityCount = todoCheckDao.deleteByCheckId(checkId);
         return true;
     }
 
