@@ -4,6 +4,7 @@ import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.dto.card.*;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
+import com.kujproject.kuj.dto.comment.CommentRespDto;
 
 import java.util.List;
 
@@ -29,4 +30,5 @@ public interface CardService {
     List<CardRespDto> findAllCardByListId(Long listId);
     CardRespDto findCardByCardId(Long cardId);
     List<ChecklistRespDto> findAllChecklistByCardId(Long cardId);
+    List<CommentRespDto> findAllCommentByCardId(Long cardId);
 }

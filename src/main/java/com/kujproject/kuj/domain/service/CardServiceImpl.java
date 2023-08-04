@@ -2,11 +2,13 @@ package com.kujproject.kuj.domain.service;
 
 import com.kujproject.kuj.domain.card.CardEntity;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
+import com.kujproject.kuj.domain.comment.CommentEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.domain.repository.CardDao;
 import com.kujproject.kuj.domain.repository.ListDao;
 import com.kujproject.kuj.dto.card.*;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
+import com.kujproject.kuj.dto.comment.CommentRespDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -237,6 +239,28 @@ public class CardServiceImpl implements CardService{
                 checklistRespDtoList.add(checklistRespDto);
             }
             return checklistRespDtoList;
+        }
+        return null;
+    }
+
+    @Override
+    public List<CommentRespDto> findAllCommentByCardId(Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+
+        if(cardEntity.isPresent()) {
+            CardEntity card = cardEntity.get();
+            List<CommentRespDto> commentRespDtoList = new ArrayList<>();
+
+            List<CommentEntity> commentEntityList = card.getComment();
+            for(CommentEntity commentEntity : commentEntityList) {
+                CommentRespDto commentRespDto = new CommentRespDto();
+
+                commentRespDto.setContent(commentEntity.getContent());
+                commentRespDto.setUserId(commentEntity.getUser().getUserId());
+
+                commentRespDtoList.add(commentRespDto);
+            }
+            return commentRespDtoList;
         }
         return null;
     }
