@@ -9,9 +9,11 @@ import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.checklist.CreateChecklistReqDto;
 import com.kujproject.kuj.dto.checklist.UpdateProgressReqDto;
 import com.kujproject.kuj.dto.checklist.UpdateTitleReqDto;
+import com.kujproject.kuj.dto.todo_check.CheckRespDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,14 +99,24 @@ public class ChecklistServiceImpl implements ChecklistService{
     }
 
     @Override
-    public List<TodoCheckEntity> findAllCheckByChecklistID(Long checklistId) {
+    public List<CheckRespDto> findAllCheckByChecklistID(Long checklistId) {
         Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+        List<CheckRespDto> checkRespDtoList = new ArrayList<>();
 
         if(checklistEntity.isPresent()) {
             ChecklistEntity checklist = checklistEntity.get();
-
             List<TodoCheckEntity> todoCheckList = checklist.getCheck();
-            return todoCheckList;
+
+            for(TodoCheckEntity todoCheckEntity : todoCheckList) {
+                CheckRespDto checkRespDto = new CheckRespDto();
+
+                checkRespDto.setTitle(todoCheckEntity.getTitle());
+                checkRespDto.setCompleted(todoCheckEntity.isCompleted());
+                checkRespDto.setDuedate(todoCheckEntity.getDuedate());
+
+                checkRespDtoList.add(checkRespDto);
+            }
+            return checkRespDtoList;
         }
         return null;
     }

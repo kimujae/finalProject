@@ -1,10 +1,10 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.checklist.CreateChecklistReqDto;
 import com.kujproject.kuj.dto.checklist.UpdateProgressReqDto;
 import com.kujproject.kuj.dto.checklist.UpdateTitleReqDto;
+import com.kujproject.kuj.dto.todo_check.CheckRespDto;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface ChecklistService {
     UpdateTitleReqDto updateTitle(UpdateTitleReqDto updateTitleReqDto, Long checklistId);
     boolean deleteChecklistById(Long checklistId);
     ChecklistRespDto findChecklistById(Long checklistId);
-    List<TodoCheckEntity> findAllCheckByChecklistID(Long checklistId);
+    List<CheckRespDto> findAllCheckByChecklistID(Long checklistId);
 }
