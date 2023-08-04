@@ -2,6 +2,7 @@ package com.kujproject.kuj.domain.card;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
+import com.kujproject.kuj.domain.comment.CommentEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,4 +41,9 @@ public class CardEntity {
     @OneToMany (mappedBy = "card", fetch = FetchType.LAZY)
     @JsonManagedReference
     List<ChecklistEntity> checklist;
+
+
+    @OneToMany (mappedBy = "card", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    List<CommentEntity> comment;
 }
