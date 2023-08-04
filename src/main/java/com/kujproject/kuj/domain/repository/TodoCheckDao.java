@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface TodoCheckDao extends Repository<TodoCheckEntity, String> {
     TodoCheckEntity save(TodoCheckEntity todoCheck);
-    TodoCheckEntity deleteByCheckId(Long todoCheckId);
+    int deleteByCheckId(Long todoCheckId);
     Optional<TodoCheckEntity> findTodoCheckEntityByCheckId(Long id);
 }
