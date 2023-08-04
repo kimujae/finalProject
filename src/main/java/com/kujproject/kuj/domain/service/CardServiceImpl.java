@@ -6,6 +6,7 @@ import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.domain.repository.CardDao;
 import com.kujproject.kuj.domain.repository.ListDao;
 import com.kujproject.kuj.dto.card.*;
+import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -219,15 +220,23 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public List<ChecklistEntity> findAllChecklistByCardId(Long cardId) {
+    public List<ChecklistRespDto> findAllChecklistByCardId(Long cardId) {
         List<ChecklistEntity> checklistEntityList;
+        List<ChecklistRespDto> checklistRespDtoList = new ArrayList<>();
 
         Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
         if(cardEntity.isPresent()) {
             CardEntity card = cardEntity.get();
-
             checklistEntityList = card.getChecklist();
-            return checklistEntityList;
+
+            for(ChecklistEntity checklist : checklistEntityList) {
+                ChecklistRespDto checklistRespDto = new ChecklistRespDto();
+                checklistRespDto.setTitle(checklist.getTitle());
+                checklistRespDto.setProgress(checklist.getProgress());
+
+                checklistRespDtoList.add(checklistRespDto);
+            }
+            return checklistRespDtoList;
         }
         return null;
     }

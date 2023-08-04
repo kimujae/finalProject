@@ -3,6 +3,7 @@ package com.kujproject.kuj.domain.service;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.dto.card.*;
+import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 
 import java.util.List;
 
@@ -27,5 +28,5 @@ public interface CardService {
     boolean deleteCardById(Long cardId);
     List<CardRespDto> findAllCardByListId(Long listId);
     CardRespDto findCardByCardId(Long cardId);
-    List<ChecklistEntity> findAllChecklistByCardId(Long cardId);
+    List<ChecklistRespDto> findAllChecklistByCardId(Long cardId);
 }

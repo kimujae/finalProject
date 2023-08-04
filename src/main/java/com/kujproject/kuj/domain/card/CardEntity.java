@@ -1,5 +1,6 @@
 package com.kujproject.kuj.domain.card;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import jakarta.persistence.*;
@@ -31,13 +32,12 @@ public class CardEntity {
     LocalDate startdate;
     LocalDate duedate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "list_id")
+    @JsonManagedReference
     ListEntity list;
 
     @OneToMany (mappedBy = "card", fetch = FetchType.LAZY)
+    @JsonManagedReference
     List<ChecklistEntity> checklist;
-
-
-
 }
