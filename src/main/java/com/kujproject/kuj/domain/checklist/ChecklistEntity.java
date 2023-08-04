@@ -1,5 +1,6 @@
 package com.kujproject.kuj.domain.checklist;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.card.CardEntity;
 import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
 import jakarta.persistence.*;
@@ -18,14 +19,17 @@ import java.util.List;
 @Table(name = "checklist")
 public class ChecklistEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long checklistId;
     String title;
     int progress;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
+    @JsonManagedReference
     CardEntity card;
 
-    @OneToMany(mappedBy = "checklist", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "checklist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     List<TodoCheckEntity> check;
 }
