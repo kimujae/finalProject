@@ -2,34 +2,62 @@ package com.kujproject.kuj.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
+import com.kujproject.kuj.dto.user.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity(name = "user")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder(builderClassName = "UserEntityBuilder")
 @Getter
-@Setter
-
 public class UserEntity {
     @Id
-    String userId;
-    String password;
-    String userName;
+    private String userId;
+    private String password;
+    private String userName;
     @Column(unique = true)
-    String email;
+    private String email;
     @Column(unique = true)
-    String phoneNum;
-    String role;
+    private String phoneNum;
+    private String role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    List<Board_UserEntity> boards = new ArrayList<>();
+    private List<Board_UserEntity> boards = new ArrayList<>();
+
+    public void changePassword(UpdatePasswordDto updatePasswordDto) {
+        this.password = updatePasswordDto.getPassword();
+    }
+
+    public void changeProfile(UpdateProfileDto updateProfileDto) {
+        this.userName = updateProfileDto.getUserName();
+    }
+
+    public void changeEmail(UpdateEmailDto updateEmailDto) {
+        this.userId = updateEmailDto.getEmail();
+    }
+
+    public void changePhoneNum(UpdatePhoneNumDto updatePhoneNumDto) {
+        this.phoneNum = updatePhoneNumDto.getPhoneNum();
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public static class UserEntityBuilder {
+        public UserEntityBuilder builder(SignUpReqDto signUpReqDto) {
+            return UserEntity.builder()
+                    .userId(signUpReqDto.getUserId())
+                    .password(signUpReqDto.getPassword())
+                    .userName(signUpReqDto.getUserName())
+                    .email(signUpReqDto.getEmail())
+                    .phoneNum(signUpReqDto.getPhoneNum())
+                    .role(signUpReqDto.getRole());
+        }
+    }
 }
