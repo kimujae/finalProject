@@ -6,10 +6,7 @@ import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.user.*;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,11 +68,11 @@ public class UserServiceImpl implements UserService{
 
         if(userEntity.isPresent()) {
             UserEntity user = userEntity.get();
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication();
 
-            if(!userDetails.getUsername().equals(userId)) {
-                throw new AccessDeniedException("{error :접근 권한이 없습니다.}");
-            }
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
 
             for(Board_UserEntity board : user.getBoards()) {
                 boards.add(board.getBoard());
@@ -107,10 +104,10 @@ public class UserServiceImpl implements UserService{
         if(userEntity.isPresent()) {
             UserEntity user = userEntity.get();
 
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication();
-            if(!userDetails.getUsername().equals(userId)) {
-                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-            }
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
 
             user.changeProfile(updateProfileDto);
             userDao.save(user);
@@ -127,10 +124,10 @@ public class UserServiceImpl implements UserService{
         if(userEntity.isPresent()) {
             UserEntity user = userEntity.get();
 
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication();
-            if(!userDetails.getUsername().equals(userId)) {
-                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-            }
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
 
             user.changeEmail(updateEmailDto);
             userDao.save(user);
@@ -147,10 +144,10 @@ public class UserServiceImpl implements UserService{
         if(userEntity.isPresent()) {
             UserEntity user = userEntity.get();
 
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication();
-            if(!userDetails.getUsername().equals(userId)) {
-                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-            }
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
 
             updatePasswordDto.setPassword(passwordEncoder.encode(updatePasswordDto.getPassword()));
             user.changePassword(updatePasswordDto);
