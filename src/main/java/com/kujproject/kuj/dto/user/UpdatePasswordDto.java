@@ -1,15 +1,22 @@
 package com.kujproject.kuj.dto.user;
 
+import com.kujproject.kuj.dto.user.constraint.UserConstraint;
+import com.kujproject.kuj.validation.user.EqualsFieldValidator;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 
 @Data
+@EqualsFieldValidator(field1 = "password", field2 = "checkPassword", message = "비밀번호가 일치하지 않습니다.")
 public class UpdatePasswordDto {
-    //EqualsField적용 해야함.
-    @NotEmpty(message = "비밀번호는 필수 항목입니다.")
-    String password;
+    @NotEmpty(message = UserConstraint.PWD_NOTEMPTY_MSG)
+    @Size(min = 8 , message = UserConstraint.PWD_SIZEMIN_MSG)
+    @Size(max = 15, message = UserConstraint.PWD_SIZEMAX_MSG)
+    @Pattern(regexp = UserConstraint.PWD_REGEXP, message = UserConstraint.PWD_PATTERN_MSG)
+    private String password;
 
-    @NotEmpty(message = "비밀번호 확인은 필수 항목입니다.")
-    String password2;
+    @NotEmpty(message = UserConstraint.CHECKPWD_NOTEMPTY_MSG)
+    private String checkPassword;
 }
