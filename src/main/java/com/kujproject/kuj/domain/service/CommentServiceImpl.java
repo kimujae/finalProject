@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService{
         Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
 
         if(cardEntity.isPresent()) {
-            Optional<UserEntity> userEntity = userDao.findById(createCommentReqDto.getUserId());
+            Optional<UserEntity> userEntity = userDao.findByUserId(createCommentReqDto.getUserId());
             if(userEntity.isPresent()) {
                 UserEntity user = userEntity.get();
                 CardEntity card = cardEntity.get();

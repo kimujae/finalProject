@@ -30,7 +30,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //UserDetails userDetails = new PrincipalDetails();
-        Optional<UserEntity> userEntity = userDao.findById(username);
+        Optional<UserEntity> userEntity = userDao.findByUserId(username);
 
         if(userEntity.isPresent()) {
             UserEntity user = userEntity.get();
