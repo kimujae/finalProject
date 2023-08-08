@@ -1,38 +1,71 @@
 package com.kujproject.kuj.dto.user;
 
+import com.kujproject.kuj.dto.user.constraint.UserConstraint;
 import com.kujproject.kuj.validation.user.EmailDupCheckValidator;
+import com.kujproject.kuj.validation.user.EqualsFieldValidator;
 import com.kujproject.kuj.validation.user.IdDupCheckValidator;
+import com.kujproject.kuj.validation.user.PhoneNumDupCheckValidator;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Getter;
 
 
-@Data
+@Getter
+@EqualsFieldValidator(field1 = "password", field2 = "checkPassword", message = "비밀번호가 일치하지 않습니다.")
 public class SignUpReqDto {
     @Column(unique = true)
-
-    @NotEmpty(message = "ID는 필수 항목입니다.")
+    @NotEmpty(message = UserConstraint.USERID_NOTEMPTY_MSG)
+    @Size(max = 20, message = UserConstraint.USERID_SIZEMAX_MSG)
     @IdDupCheckValidator
-    String userId;
+    private String userId;
 
-    @NotEmpty(message = "비밀번호는 필수 항목입니다.")
-    String password;
+    @NotEmpty(message = UserConstraint.PWD_NOTEMPTY_MSG)
+    @Size(min = 8 , message = UserConstraint.PWD_SIZEMIN_MSG)
+    @Size(max = 15, message = UserConstraint.PWD_SIZEMAX_MSG)
+    @Pattern(regexp = UserConstraint.PWD_REGEXP, message = UserConstraint.PWD_PATTERN_MSG)
+    private String password;
 
-    @NotEmpty(message = "비밀번호확인은 필수 항목입니다.")
-    String password2;
+    @NotEmpty(message = UserConstraint.CHECKPWD_NOTEMPTY_MSG)
+    private String checkPassword;
 
-    @NotEmpty(message = "이름은 필수 항목입니다.")
-    String userName;
+    @NotEmpty(message = UserConstraint.USERNAME_NOTEMPTY_MSG)
+    @Size(max = 20, message = UserConstraint.USERNAME_SIZEMAX_MSG)
+    private String userName;
 
     @Column(unique = true)
-    @Email(message = "유효한 이메일을 입력해주세요.")
+    @Email(message = UserConstraint.EMAIL)
+    @Size(max = 100, message = UserConstraint.EMAIL_SIZEMAX_MSG)
     @EmailDupCheckValidator
-    String email;
+    private String email;
 
     @Column(unique = true)
-    @NotEmpty(message = "전화번호는 필수 항목입니다.")
-    String phoneNum;
+    @NotEmpty(message = UserConstraint.PHONENUM_NOTEMPTY_MSG)
+    @Pattern(regexp = UserConstraint.PHONENUM_REGEXP, message = UserConstraint.PHONENUM_NOTEMPTY_MSG)
+    @Size(max = 20, message = UserConstraint.PHONENUM_SIZEMAX_MSG)
+    @PhoneNumDupCheckValidator
+    private String phoneNum;
 
-    String role;
+    private String role;
+
+    @Builder
+    public SignUpReqDto(String userId, String password, String checkPassword, String userName, String email, String phoneNum) {
+        this.userId = userId;
+        this.password = password;
+        this.checkPassword = checkPassword;
+        this.userName = userName;
+        this.email = email;
+        this.phoneNum = phoneNum;
+    }
+
+    public void initailizeRole(String role) {
+        this.role = role;
+    }
+
+    public void encodingPasswordBy(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }

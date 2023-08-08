@@ -32,7 +32,7 @@ public class TodoCheckServiceImpl implements TodoCheckService{
 
         if(checklistEntity.isPresent()) {
             ChecklistEntity checklist = checklistEntity.get();
-            Optional<UserEntity> userEntity = userDao.findById(createCheckReqDto.getUserId());
+            Optional<UserEntity> userEntity = userDao.findByUserId(createCheckReqDto.getUserId());
 
             if(userEntity.isPresent()) {
                 UserEntity user = userEntity.get();

@@ -17,12 +17,12 @@ public class Board_UserEntity {
     @Id
     Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     @JsonBackReference
     BoardEntity board; // 사용자 정의 entity 선언(boardId, boardName)
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonBackReference
     UserEntity user; // 사용자 정의 entity 선언(userId, userName)

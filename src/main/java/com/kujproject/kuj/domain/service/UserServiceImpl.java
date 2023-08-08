@@ -5,8 +5,11 @@ import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.user.*;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserDao userDao;
-
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
@@ -25,117 +27,161 @@ public class UserServiceImpl implements UserService{
     }
 
 
-    //Dto로 해결
     @Override
-    public UserEntity signUp(SignUpReqDto signUpReqDto) {
-        // new 연산 권장?
-        UserEntity userEntity = new UserEntity();
+    public UserRespDto signUp(SignUpReqDto signUpReqDto) {
+        //password 인코딩
+        String encodedPassword = passwordEncoder.encode(signUpReqDto.getPassword());
+        signUpReqDto.encodingPasswordBy(encodedPassword);
+        signUpReqDto.initailizeRole("ROLE_USER");
 
-        userEntity.setUserId(signUpReqDto.getUserId());
-        userEntity.setPassword(passwordEncoder.encode(signUpReqDto.getPassword()));
-        userEntity.setEmail(signUpReqDto.getEmail());
-        userEntity.setUserName(signUpReqDto.getUserName());
-        userEntity.setPhoneNum(signUpReqDto.getPhoneNum());
-        userEntity.setRole("ROLE_USER");
+        // SignUpReqDto -> UserEntity 변환
+        UserEntity.UserEntityBuilder userEntityBuilder = UserEntity.builder();
+        UserEntity userEntity = userEntityBuilder.builder(signUpReqDto).build();
+        //userEntity.setRole("ROLE_USER"); // 빌더생성이므로 더티체킹 못함.
 
-        return userDao.save(userEntity);
+        userDao.save(userEntity);
+
+        //UserEntity -> UserRespDto 변환
+        UserRespDto userRespDto = UserRespDto.convertedBy(userEntity).build();
+        return userRespDto;
     }
 
 
     @Override
-    public Optional<UserRespDto> findUserById(String userId) {
-        Optional<UserEntity> userEntity = userDao.findById(userId);
+    public UserRespDto findUserById(String userId) {
+        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
 
         if(userEntity.isPresent()) {
-           UserRespDto userRespDto = new UserRespDto();
-
            UserEntity user = userEntity.get();
-           userRespDto.setUserId(user.getUserId());
-           userRespDto.setEmail(user.getEmail());
-           userRespDto.setUserName(user.getUserName());
-           userRespDto.setPhoneNum(user.getPhoneNum());
+           UserRespDto userRespDto = UserRespDto.convertedBy(user).build();
 
-           return Optional.of(userRespDto);
+           return userRespDto;
         }
 
-        return null;
+        throw new EntityNotFoundException("{error : 해당 Id의 유저가 존재하지 않습니다.}");
     }
 
     @Override
-    public List<BoardEntity> findUsersBoard(String id) {
+    public List<BoardEntity> findUsersBoard(String userId) {
         List<BoardEntity> boards = new ArrayList<>();
-        Optional<UserEntity> foundUser = userDao.findById(id);
+        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
 
-        if(foundUser.isPresent()) {
-            UserEntity user = foundUser.get();
+        if(userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
+
             for(Board_UserEntity board : user.getBoards()) {
                 boards.add(board.getBoard());
             }
             return boards;
         }
-        return null;
+
+        throw new EntityNotFoundException("{error :해당 Id의 유저가 존재하지 않습니다.}");
     }
 
     @Override
-    public Optional<List<UserEntity>> findAllUser() {
-        return Optional.empty();
-    }
+    @Secured("ROLE_ADMIN")
+    public List<UserRespDto> findAllUser() {
+        List<UserEntity> allUsers = userDao.findAll();
+        List<UserRespDto> userRespDtoList = new ArrayList<>();
 
-    @Override
-    public UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto) {
-        UserEntity userEntity = userDao.findById(userId).get();
-        userEntity.setUserName(updateProfileDto.getUserName());
-
-        userDao.save(userEntity);
-        return updateProfileDto;
-    }
-
-    @Override
-    public UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto) {
-        UserEntity userEntity = userDao.findById(userId).get();
-        userEntity.setEmail(updateEmailDto.getEmail());
-
-        userDao.save(userEntity);
-        return updateEmailDto;
-    }
-
-    @Override
-    public boolean updatePassword(String userId, UpdatePasswordDto updatePasswordDto) {
-        UserEntity userEntity = userDao.findById(userId).get();
-        userEntity.setEmail(updatePasswordDto.getPassword());
-
-        userDao.save(userEntity);
-        return true;
-    }
-
-    @Override
-    public boolean deleteUser(String userId) {
-        Optional<UserEntity> user = userDao.findById(userId);
-
-        if(user.isPresent()) {
-            userDao.deleteById(userId);
-            return true;
+        for(UserEntity user : allUsers) {
+            UserRespDto userRespDto = UserRespDto.convertedBy(user).build();
+            userRespDtoList.add(userRespDto);
         }
+        return userRespDtoList;
+    }
 
-        return false;
+    @Override
+    @Transactional
+    public UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto) {
+        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+
+        if(userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
+
+            user.changeProfile(updateProfileDto);
+            userDao.save(user);
+            return updateProfileDto;
+        }
+        throw new EntityNotFoundException("{error : 해당 유저가 없습니다.}");
+    }
+
+    @Override
+    @Transactional
+    public UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto) {
+        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+
+        if(userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
+
+            user.changeEmail(updateEmailDto);
+            userDao.save(user);
+            return updateEmailDto;
+        }
+        throw new EntityNotFoundException("{error : 해당 유저가 없습니다.}");
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(String userId, UpdatePasswordDto updatePasswordDto) {
+        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+
+        if(userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
+//            }
+
+            updatePasswordDto.setPassword(passwordEncoder.encode(updatePasswordDto.getPassword()));
+            user.changePassword(updatePasswordDto);
+            userDao.save(user);
+        }
+        throw new EntityNotFoundException("{error : 해당 유저가 없습니다.}");
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(String userId) {
+        int deletedCount = userDao.deleteByUserId(userId);
+
+        if(deletedCount == 0) {
+            throw new EntityNotFoundException("{error : 삭제하려는 유저가 존재하지 않습니다.}");
+        }
     }
 
 
     @Override
     public boolean existByUserId(String userId) {
-        boolean isExistByUserId = false;
-        if(userDao.existsByUserId(userId) != null) {
-            isExistByUserId = true;
-        }
+        boolean isExistByUserId = userDao.existsByUserId(userId);
         return isExistByUserId;
     }
 
     @Override
     public boolean existByEmail(String email) {
-        boolean isExistByEmail = false;
-        if(userDao.existsByUserId(email) != null) {
-            isExistByEmail = true;
-        }
+        boolean isExistByEmail = userDao.existsByEmail(email);
         return isExistByEmail;
+    }
+
+    @Override
+    public boolean existByPhoneNum(String phoneNum) {
+        boolean isExistByPhoneNum = userDao.existsByPhoneNum(phoneNum);
+        return isExistByPhoneNum;
     }
 }

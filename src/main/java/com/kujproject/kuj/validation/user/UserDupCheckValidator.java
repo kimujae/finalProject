@@ -47,4 +47,27 @@ public class UserDupCheckValidator {
             return true;
         }
     }
+
+
+    public static class PhoneNumDupCheck implements ConstraintValidator<PhoneNumDupCheckValidator, String> {
+        private final UserService userService;
+
+        public PhoneNumDupCheck(UserService userService) {
+            this.userService = userService;
+        }
+
+
+        @Override
+        public void initialize(PhoneNumDupCheckValidator constraintAnnotation) {
+            ConstraintValidator.super.initialize(constraintAnnotation);
+        }
+
+        @Override
+        public boolean isValid(String value, ConstraintValidatorContext context) {
+            if(userService.existByPhoneNum(value)) {
+                return false;
+            }
+            return true;
+        }
+    }
 }
