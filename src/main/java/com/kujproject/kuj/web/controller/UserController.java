@@ -2,6 +2,7 @@ package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.UserService;
 import com.kujproject.kuj.dto.user.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,22 +10,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
 public class UserController {
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     //자동 주입(spring 4.3 < ver)
     public UserController(UserService userService, PasswordEncoder passwordEncoder){
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
     
     @PostMapping("/user")
@@ -40,20 +36,19 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
+
         userService.signUp(signUpReqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpReqDto);
     }
 
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserRespDto> findUserById(@PathVariable String id) {
-        Optional<UserRespDto> foundUser = userService.findUserById(id);
-
-        if(foundUser != null) {
-            return ResponseEntity.ok().body(foundUser.get());
-        }
-        else {
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<?> findUserById(@PathVariable String id) {
+        try {
+            UserRespDto foundUser = userService.findUserById(id);
+            return ResponseEntity.ok().body(foundUser);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -71,12 +66,16 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        userService.updateEmail(id, updateEmailDto);
-        return ResponseEntity.ok().body(updateEmailDto);
+        try {
+            userService.updateEmail(id, updateEmailDto);
+            return ResponseEntity.ok().body(updateEmailDto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PatchMapping("/user/{id}/passwd")
-    public ResponseEntity<?> updateEmail(@PathVariable String id,
+    public ResponseEntity<?> updatePassword(@PathVariable String id,
                                          @Valid @RequestBody UpdatePasswordDto updatePasswordDto, BindingResult bindingResult) {
         // bindingResult 에러 검출
         if(bindingResult.hasErrors()) {
@@ -89,13 +88,11 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        boolean isUpdated = userService.updatePassword(id, updatePasswordDto);
-
-        if(isUpdated) {
-            return ResponseEntity.ok().body(updatePasswordDto);
-        }
-        else {
-            return ResponseEntity.badRequest().build();
+        try {
+            userService.updatePassword(id, updatePasswordDto);
+            return ResponseEntity.ok().body("패스워드 업데이트가 성공적으로 완료되었습니다.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -113,20 +110,22 @@ public class UserController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        userService.updateUserProfile(id, updateProfileDto);
-        return ResponseEntity.ok().body(updateProfileDto);
+        try {
+            userService.updateUserProfile(id, updateProfileDto);
+            return ResponseEntity.ok().body(updateProfileDto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<Boolean> deleteUserById(@PathVariable String id) {
-        boolean isDeleted = userService.deleteUser(id);
-
-        if(isDeleted) {
+    public ResponseEntity<?> deleteUserById(@PathVariable String id) {
+        try {
+            userService.deleteUser(id);
             return ResponseEntity.noContent().build();
-        }
-        else {
-            return ResponseEntity.notFound().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
