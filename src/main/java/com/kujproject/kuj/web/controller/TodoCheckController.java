@@ -28,7 +28,7 @@ public class TodoCheckController {
 
     @PostMapping("/checklist/{id}/todoCheck")
     public ResponseEntity<CreateCheckReqDto> createCheck(
-            @PathVariable Long id, @Valid @RequestBody  CreateCheckReqDto createCheckReqDto, BindingResult bindingResult) {
+            @PathVariable Long id, @Valid @RequestBody  CreateCheckReqDto createCheckReqDto) {
 
         CreateCheckReqDto checkReqDto = todoCheckService.createCheck(createCheckReqDto, id);
         if(checkReqDto != null) {
@@ -60,52 +60,21 @@ public class TodoCheckController {
 
     @PatchMapping("/todoCheck/{id}/completed")
     public ResponseEntity<?> updateCompleted(
-            @PathVariable Long id, @Valid @RequestBody UpdateCompletedReqDto updateCompletedReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
+            @PathVariable Long id, @Valid @RequestBody UpdateCompletedReqDto updateCompletedReqDto) {
         todoCheckService.updateCompleted(updateCompletedReqDto, id);
         return ResponseEntity.ok().body(updateCompletedReqDto);
     }
 
     @PatchMapping("/todoCheck/{id}/duedate")
     public ResponseEntity<?> updateDate(
-            @PathVariable Long id, @Valid @RequestBody UpdateDateReqDto updateDateReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-
+            @PathVariable Long id, @Valid @RequestBody UpdateDateReqDto updateDateReqDto) {
         todoCheckService.updateDate(updateDateReqDto, id);
         return ResponseEntity.ok().body(updateDateReqDto);
     }
 
     @PatchMapping("/todoCheck/{id}/title")
     public ResponseEntity<?> updateTitle(
-            @PathVariable Long id, @Valid @RequestBody UpdateTitleReqDto updateTitleReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @PathVariable Long id, @Valid @RequestBody UpdateTitleReqDto updateTitleReqDto) {
         todoCheckService.updateTitle(updateTitleReqDto, id);
         return ResponseEntity.ok().body(updateTitleReqDto);
     }

@@ -5,6 +5,8 @@ import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.user.*;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService{
            return userRespDto;
         }
 
-        throw new EntityNotFoundException("{error : 해당 Id의 유저가 존재하지 않습니다.}");
+        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class UserServiceImpl implements UserService{
             return boards;
         }
 
-        throw new EntityNotFoundException("{error :해당 Id의 유저가 존재하지 않습니다.}");
+        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class UserServiceImpl implements UserService{
             userDao.save(user);
             return updateProfileDto;
         }
-        throw new EntityNotFoundException("{error : 해당 유저가 없습니다.}");
+        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class UserServiceImpl implements UserService{
             userDao.save(user);
             return updateEmailDto;
         }
-        throw new EntityNotFoundException("{error : 해당 유저가 없습니다.}");
+        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
     }
 
     @Override
@@ -153,7 +155,7 @@ public class UserServiceImpl implements UserService{
             user.changePassword(updatePasswordDto);
             userDao.save(user);
         }
-        throw new EntityNotFoundException("{error : 해당 유저가 없습니다.}");
+        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
     }
 
     @Override
@@ -162,7 +164,7 @@ public class UserServiceImpl implements UserService{
         int deletedCount = userDao.deleteByUserId(userId);
 
         if(deletedCount == 0) {
-            throw new EntityNotFoundException("{error : 삭제하려는 유저가 존재하지 않습니다.}");
+            throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
     }
 

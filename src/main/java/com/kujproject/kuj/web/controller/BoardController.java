@@ -24,18 +24,7 @@ public class BoardController {
 
     @PostMapping("/board")
     public ResponseEntity<?> createBoard(
-            @Valid @RequestBody CreateBoardReqDto createBoardReqDto, BindingResult bindingResult) {
-
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody CreateBoardReqDto createBoardReqDto) {
         boardService.createNewBoard(createBoardReqDto);
         BoardRespDto boardRespDto = new BoardRespDto();
 
@@ -57,54 +46,21 @@ public class BoardController {
 
     @PatchMapping("/board/{id}/cover")
     public ResponseEntity<?> updateCover(@PathVariable Long id,
-                                           @Valid @RequestBody UpdateBoardCoverDto updateBoardCoverDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+                                           @Valid @RequestBody UpdateBoardCoverDto updateBoardCoverDto) {
         boardService.updateCover(id, updateBoardCoverDto);
         return ResponseEntity.ok().body(updateBoardCoverDto);
     }
 
     @PatchMapping("/board/{id}/public")
     public ResponseEntity<?> updatePublicRange(@PathVariable Long id,
-                                               @Valid @RequestBody UpdateBoardPubRangeDto updateBoardPubRangeDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+                                               @Valid @RequestBody UpdateBoardPubRangeDto updateBoardPubRangeDto) {
         boardService.updatePubRange(id, updateBoardPubRangeDto);
         return ResponseEntity.ok().body(updateBoardPubRangeDto);
     }
 
     @PatchMapping("/board/{id}/title")
     public ResponseEntity<?> updateTitle(@PathVariable Long id,
-                                         @Valid @RequestBody UpdateBoardTitleDto updateBoardTitleDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+                                         @Valid @RequestBody UpdateBoardTitleDto updateBoardTitleDto) {
         boardService.updateTitle(id, updateBoardTitleDto);
         return ResponseEntity.ok().body(updateBoardTitleDto);
     }
