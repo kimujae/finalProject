@@ -2,16 +2,12 @@ package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.UserService;
 import com.kujproject.kuj.dto.user.*;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
-import java.util.Map;
+
 
 
 @RestController

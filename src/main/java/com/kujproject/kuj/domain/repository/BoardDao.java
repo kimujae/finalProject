@@ -10,9 +10,8 @@ import java.util.Optional;
 public interface BoardDao extends Repository<BoardEntity, String> {
     BoardEntity save(BoardEntity boardEntity);
     //Optional<List<Board_UserEntity>> findByBoardId(Long boardId);
-    Optional<BoardEntity> deleteByBoardId(Long boardId);
+    int deleteByBoardId(Long boardId);
 
-    @Query("SELECT DISTINCT b FROM board b LEFT JOIN FETCH b.users u WHERE b.boardId = :boardId")
-    Optional<BoardEntity> findByBoardId(@Param("boardId") Long boardId);
-
+    //@Query("SELECT DISTINCT b FROM board b LEFT JOIN FETCH b.users u WHERE b.boardId = :boardId")
+    Optional<BoardEntity> findByBoardId(Long boardId);
 }

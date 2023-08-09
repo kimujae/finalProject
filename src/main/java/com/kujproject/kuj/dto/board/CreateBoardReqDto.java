@@ -1,13 +1,20 @@
 package com.kujproject.kuj.dto.board;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
-@Data
+@Getter
 public class CreateBoardReqDto {
-    // 필수
+    @NotEmpty
+    @Size(max = 20, message = "보드 제목은 20자를 초과할 수 없습니다.")
     String title;
-    //기본값
-    String cover;
-    //기본값
-    boolean isPublic;
+
+    @Size(max = 7, message = "보드 커버는 7자를 초과할 수 없습니다.")
+    @Pattern(regexp = "^#[0-9]{6}$")
+    String cover = "#000000";
+
+    @NotEmpty
+    boolean isPublic = true;
 }

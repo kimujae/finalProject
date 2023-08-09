@@ -3,8 +3,10 @@ package com.kujproject.kuj.domain.service;
 import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.repository.BoardDao;
-import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.board.*;
+import com.kujproject.kuj.dto.user.UserRespDto;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,85 +24,78 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public BoardRespDto findBoardByBoardId(Long boardId) {
         Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
-        if(boardEntity.isPresent()) {
-            BoardRespDto boardRespDto = new BoardRespDto();
-            BoardEntity board = boardEntity.get();
-            boardRespDto.setBoardTitle(board.getTitle());
-            boardRespDto.setPublic(board.isPublic());
-            boardRespDto.setCover(board.getCover());
+        BoardEntity board = boardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
-            return boardRespDto;
-        }
-
-        return null;
+        return BoardRespDto.convertedBy(board).build();
     }
 
+
     @Override
-    public List<UserEntity> findMemberByBoardId(Long boardId) {
-        List<Board_UserEntity> foundUsers;
-        List<UserEntity> members = new ArrayList<>();
+    public List<UserRespDto> findMemberByBoardId(Long boardId) {
         Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
+        BoardEntity board = boardEntity.orElseThrow(()->
+            new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
-        if(boardEntity != null) {
-            BoardEntity board = boardEntity.get();
-            foundUsers = board.getUsers();
 
-            for (Board_UserEntity user : foundUsers) {
-                members.add(user.getUser());
-            }
-            return members;
+        List<Board_UserEntity> foundUsers = board.getUsers();
+        List<UserRespDto> members = new ArrayList<>();
+        for (Board_UserEntity user : foundUsers) {
+            UserRespDto userRespDto = UserRespDto.convertedBy(user.getUser()).build();
+            members.add(userRespDto);
         }
-        return null;
+        return members;
     }
 
 
     @Override
-    public BoardEntity createNewBoard(CreateBoardReqDto createBoardReqDto) {
-        BoardEntity boardEntity = new BoardEntity();
+    public BoardRespDto createNewBoard(CreateBoardReqDto createBoardReqDto) {
+        BoardEntity board = BoardEntity.convertedBy(createBoardReqDto).build();
+        boardDao.save(board);
 
-        boardEntity.setCover(createBoardReqDto.getCover());
-        boardEntity.setPublic(createBoardReqDto.isPublic());
-        boardEntity.setTitle(createBoardReqDto.getTitle());
-
-        return boardDao.save(boardEntity);
+        return BoardRespDto.convertedBy(board).build();
     }
 
     @Override
-    public boolean deleteBoard(Long boardId) {
-        Optional<BoardEntity> board = boardDao.findByBoardId(boardId);
+    public void deleteBoard(Long boardId) {
+        int deletedCount = boardDao.deleteByBoardId(boardId);
 
-        if(board.isPresent()) {
-            boardDao.deleteByBoardId(boardId);
-            return true;
+        if(deletedCount == 0) {
+            throw new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND);
         }
-
-        return false;
     }
 
     @Override
     public UpdateBoardCoverDto updateCover(Long boardId, UpdateBoardCoverDto updateBoardCoverDto) {
-        BoardEntity boardEntity = boardDao.findByBoardId(boardId).get();
-        boardEntity.setCover(updateBoardCoverDto.getCover());
+        Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
+        BoardEntity board=  boardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
-        boardDao.save(boardEntity);
+        board.changeCover(updateBoardCoverDto);
+        boardDao.save(board);
         return updateBoardCoverDto;
     }
 
     @Override
     public UpdateBoardPubRangeDto updatePubRange(Long boardId, UpdateBoardPubRangeDto updateBoardPubRangeDto) {
-        BoardEntity boardEntity = boardDao.findByBoardId(boardId).get();
-        boardEntity.setPublic(updateBoardPubRangeDto.isPublic());
+        Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
+        BoardEntity board=  boardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
-        boardDao.save(boardEntity);
+        board.changePublic(updateBoardPubRangeDto);
+        boardDao.save(board);
         return updateBoardPubRangeDto;
     }
 
     @Override
     public UpdateBoardTitleDto updateTitle(Long boardId, UpdateBoardTitleDto updateBoardTitleDto) {
-        BoardEntity boardEntity = boardDao.findByBoardId(boardId).get();
-        boardEntity.setTitle(updateBoardTitleDto.getTitle());
+        Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
 
-        boardDao.save(boardEntity);
+        BoardEntity board=  boardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
+
+        board.changeTitle(updateBoardTitleDto);
+        boardDao.save(board);
         return updateBoardTitleDto;
     }
 }

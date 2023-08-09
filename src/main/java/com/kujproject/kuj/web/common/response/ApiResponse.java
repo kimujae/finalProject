@@ -1,7 +1,9 @@
 package com.kujproject.kuj.web.common.response;
 
+import com.kujproject.kuj.web.common.code.SuccessCode;
 import lombok.Builder;
 import lombok.Getter;
+
 
 @Getter
 public class ApiResponse<T> {
@@ -9,15 +11,15 @@ public class ApiResponse<T> {
     private T result;
 
     // API 응답 코드 Response
-    private int resultCode;
+    private String resultCode;
 
     // API 응답 코드 Message
     private String resultMsg;
 
     @Builder
-    public ApiResponse(final T result, final int resultCode, final String resultMsg) {
+    public ApiResponse(T result, SuccessCode successCode) {
         this.result = result;
-        this.resultCode = resultCode;
-        this.resultMsg = resultMsg;
+        this.resultCode = successCode.getCode();
+        this.resultMsg = successCode.getMessage();
     }
 }

@@ -1,5 +1,8 @@
 package com.kujproject.kuj.web.common.code;
 
+import lombok.Getter;
+
+@Getter
 public enum SuccessCode {
 
     SELECT_SUCCESS(200, "200", "SELECT SUCCESS"),
