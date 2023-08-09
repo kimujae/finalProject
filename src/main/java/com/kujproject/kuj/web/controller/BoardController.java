@@ -3,14 +3,13 @@ package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.BoardService;
 import com.kujproject.kuj.dto.board.*;
+import com.kujproject.kuj.web.common.code.SuccessCode;
+import com.kujproject.kuj.web.common.response.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 
 @RestController
@@ -23,59 +22,68 @@ public class BoardController {
 
 
     @PostMapping("/board")
-    public ResponseEntity<?> createBoard(
+    public ResponseEntity<ApiResponse> createBoard(
             @Valid @RequestBody CreateBoardReqDto createBoardReqDto) {
-        boardService.createNewBoard(createBoardReqDto);
-        BoardRespDto boardRespDto = new BoardRespDto();
 
-        return ResponseEntity.ok().body(createBoardReqDto); // respDto로 반환?
+        boardService.createNewBoard(createBoardReqDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                        .result(createBoardReqDto)
+                        .successCode(SuccessCode.INSERT_SUCCESS)
+                        .build(), HttpStatus.OK);
     }
 
 
     @GetMapping("/board/{id}")
-    public ResponseEntity<?> findBoardByBoardId(@PathVariable Long id) {
-        BoardRespDto foundBoard = boardService.findBoardByBoardId(id);
+    public ResponseEntity<ApiResponse> findBoardByBoardId(@PathVariable Long id) {
 
-        if(foundBoard != null) {
-            return ResponseEntity.ok().body(foundBoard);
-        }
-        else {
-            return ResponseEntity.noContent().build();
-        }
+        BoardRespDto foundBoard = boardService.findBoardByBoardId(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(foundBoard)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/board/{id}/cover")
-    public ResponseEntity<?> updateCover(@PathVariable Long id,
+    public ResponseEntity<ApiResponse> updateCover(@PathVariable Long id,
                                            @Valid @RequestBody UpdateBoardCoverDto updateBoardCoverDto) {
-        boardService.updateCover(id, updateBoardCoverDto);
-        return ResponseEntity.ok().body(updateBoardCoverDto);
+
+        updateBoardCoverDto = boardService.updateCover(id, updateBoardCoverDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateBoardCoverDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/board/{id}/public")
-    public ResponseEntity<?> updatePublicRange(@PathVariable Long id,
+    public ResponseEntity<ApiResponse> updatePublicRange(@PathVariable Long id,
                                                @Valid @RequestBody UpdateBoardPubRangeDto updateBoardPubRangeDto) {
-        boardService.updatePubRange(id, updateBoardPubRangeDto);
-        return ResponseEntity.ok().body(updateBoardPubRangeDto);
+
+        updateBoardPubRangeDto = boardService.updatePubRange(id, updateBoardPubRangeDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateBoardPubRangeDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/board/{id}/title")
-    public ResponseEntity<?> updateTitle(@PathVariable Long id,
+    public ResponseEntity<ApiResponse> updateTitle(@PathVariable Long id,
                                          @Valid @RequestBody UpdateBoardTitleDto updateBoardTitleDto) {
-        boardService.updateTitle(id, updateBoardTitleDto);
-        return ResponseEntity.ok().body(updateBoardTitleDto);
+
+        updateBoardTitleDto = boardService.updateTitle(id, updateBoardTitleDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateBoardTitleDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @DeleteMapping("/board/{id}")
-    public ResponseEntity<Boolean> deleteBoardById(@PathVariable Long id) {
-        boolean isDeleted = boardService.deleteBoard(id);
+    public ResponseEntity<ApiResponse> deleteBoardById(@PathVariable Long id) {
 
-        if(isDeleted) {
-            return ResponseEntity.noContent().build();
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
+        boardService.deleteBoard(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(null)
+                .successCode(SuccessCode.DELETE_SUCCESS)
+                .build(), HttpStatus.NO_CONTENT);
     }
-
 }
