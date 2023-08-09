@@ -4,10 +4,10 @@ import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
+import com.kujproject.kuj.dto.board.BoardRespDto;
 import com.kujproject.kuj.dto.user.*;
 import com.kujproject.kuj.web.common.code.ErrorCode;
 import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,20 +64,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<BoardEntity> findUsersBoard(String userId) {
-        List<BoardEntity> boards = new ArrayList<>();
+    public List<BoardRespDto> findUsersBoard(String userId) {
+
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
 
         if(userEntity.isPresent()) {
             UserEntity user = userEntity.get();
-
+            List<BoardRespDto> boards = new ArrayList<>();
 //            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
 //                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
 //            }
 
             for(Board_UserEntity board : user.getBoards()) {
-                boards.add(board.getBoard());
+                BoardRespDto boardRespDto = BoardRespDto.convertedBy(board.getBoard()).build();
+                boards.add(boardRespDto);
             }
             return boards;
         }
