@@ -31,17 +31,7 @@ public class ChecklistController {
 
     @PostMapping("/card/{id}/checklist")
     public ResponseEntity<?> createChecklist(
-            @PathVariable Long id, @Valid @RequestBody CreateChecklistReqDto createChecklistReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @PathVariable Long id, @Valid @RequestBody CreateChecklistReqDto createChecklistReqDto) {
         checklistService.createChecklist(createChecklistReqDto, id);
         return ResponseEntity.ok().body(createChecklistReqDto);
     }
@@ -74,17 +64,7 @@ public class ChecklistController {
 
     @PatchMapping("/checklist/{id}/progress")
     public ResponseEntity<?> updateProgress(
-            @PathVariable Long id, @Valid @RequestBody UpdateProgressReqDto updateProgressReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @PathVariable Long id, @Valid @RequestBody UpdateProgressReqDto updateProgressReqDto) {
         checklistService.updateProgress(updateProgressReqDto, id);
         return ResponseEntity.ok().body(updateProgressReqDto);
     }
@@ -92,17 +72,7 @@ public class ChecklistController {
 
     @PatchMapping("/checklist/{id}/title")
     public ResponseEntity<?> updateTitle(
-            @PathVariable Long id, @Valid @RequestBody UpdateTitleReqDto updateTitleReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @PathVariable Long id, @Valid @RequestBody UpdateTitleReqDto updateTitleReqDto) {
         checklistService.updateTitle(updateTitleReqDto, id);
         return ResponseEntity.ok().body(updateTitleReqDto);
     }

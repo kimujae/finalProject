@@ -26,18 +26,7 @@ public class ListController {
 
     @PostMapping("/board/{id}/list")
     public ResponseEntity<?> createList(
-            @Valid @RequestBody CreateListReqDto createListReqDto, @PathVariable Long id,  BindingResult bindingResult) {
-
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody CreateListReqDto createListReqDto, @PathVariable Long id) {
         listService.createList(createListReqDto, id);
         return ResponseEntity.ok().body(createListReqDto);
     }
@@ -73,17 +62,7 @@ public class ListController {
 
     @PatchMapping("/list/{id}/order")
     public ResponseEntity<?> changeListOrder(
-            @PathVariable Long id, @Valid @RequestBody UpdateListOrderReqDto updateListOrderReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @PathVariable Long id, @Valid @RequestBody UpdateListOrderReqDto updateListOrderReqDto) {
         listService.changeListOrder(id, updateListOrderReqDto);
         return ResponseEntity.ok().body(updateListOrderReqDto);
     }
@@ -91,17 +70,7 @@ public class ListController {
 
     @PatchMapping("/list/{id}/title")
     public ResponseEntity<?> updadteListTitle(
-            @PathVariable Long id, UpdateListTitleReqDto updateListTitleReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @PathVariable Long id, UpdateListTitleReqDto updateListTitleReqDto) {
         listService.updateListTitle(id, updateListTitleReqDto);
         return ResponseEntity.ok().body(updateListTitleReqDto);
 

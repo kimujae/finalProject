@@ -24,19 +24,7 @@ public class UserController {
     }
     
     @PostMapping("/user")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
         userService.signUp(signUpReqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(signUpReqDto);
     }
@@ -44,89 +32,42 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
-        try {
-            UserRespDto foundUser = userService.findUserById(id);
-            return ResponseEntity.ok().body(foundUser);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        UserRespDto foundUser = userService.findUserById(id);
+        return ResponseEntity.ok().body(foundUser);
+
     }
 
     @PatchMapping("/user/{id}/email")
     public ResponseEntity<?> updateEmail(@PathVariable String id,
-                                         @Valid @RequestBody UpdateEmailDto updateEmailDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
+                                         @Valid @RequestBody UpdateEmailDto updateEmailDto) {
 
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
+        userService.updateEmail(id, updateEmailDto);
+        return ResponseEntity.ok().body(updateEmailDto);
 
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-        try {
-            userService.updateEmail(id, updateEmailDto);
-            return ResponseEntity.ok().body(updateEmailDto);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
     }
 
     @PatchMapping("/user/{id}/passwd")
     public ResponseEntity<?> updatePassword(@PathVariable String id,
-                                         @Valid @RequestBody UpdatePasswordDto updatePasswordDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
+                                         @Valid @RequestBody UpdatePasswordDto updatePasswordDto) {
 
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-        try {
-            userService.updatePassword(id, updatePasswordDto);
-            return ResponseEntity.ok().body("패스워드 업데이트가 성공적으로 완료되었습니다.");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        userService.updatePassword(id, updatePasswordDto);
+        return ResponseEntity.ok().body("패스워드 업데이트가 성공적으로 완료되었습니다.");
     }
 
     @PatchMapping("/user/{id}/profile")
     public ResponseEntity<?> updateProfile(@PathVariable String id,
-                                           @Valid @RequestBody UpdateProfileDto updateProfileDto, BindingResult bindingResult) {
-        // bindingResult 에러 검출
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
+                                           @Valid @RequestBody UpdateProfileDto updateProfileDto) {
 
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-        try {
-            userService.updateUserProfile(id, updateProfileDto);
-            return ResponseEntity.ok().body(updateProfileDto);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        userService.updateUserProfile(id, updateProfileDto);
+        return ResponseEntity.ok().body(updateProfileDto);
     }
 
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable String id) {
-        try {
-            userService.deleteUser(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
 //    @GetMapping("/loginform")

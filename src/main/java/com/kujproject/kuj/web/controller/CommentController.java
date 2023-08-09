@@ -26,7 +26,7 @@ public class CommentController {
 
     @PostMapping("/card/{id}/comment")
     public ResponseEntity<?> createComment(
-            @PathVariable Long id, @Valid @RequestBody CreateCommentReqDto createCommentReqDto, BindingResult bindingResult) {
+            @PathVariable Long id, @Valid @RequestBody CreateCommentReqDto createCommentReqDto) {
 
         createCommentReqDto = commentService.createComment(createCommentReqDto, id);
 
@@ -59,7 +59,7 @@ public class CommentController {
 
     @PatchMapping("comment/{id}/content")
     public ResponseEntity<?> updateContent(
-            @PathVariable Long id, @Valid @RequestBody UpdateContentReqDto updateContentReqDto, BindingResult bindingResult) {
+            @PathVariable Long id, @Valid @RequestBody UpdateContentReqDto updateContentReqDto) {
         updateContentReqDto = commentService.updateContent(updateContentReqDto, id);
 
         if(updateContentReqDto != null) {

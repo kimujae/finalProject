@@ -24,18 +24,7 @@ public class CardController {
 
     @PostMapping("/list/{id}/card")
     public ResponseEntity<?> createCard(
-            @Valid @RequestBody CreateCardReqDto createCardReqDto, BindingResult bindingResult, @PathVariable Long id) {
-        // 유효성 검사
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody CreateCardReqDto createCardReqDto,  @PathVariable Long id) {
         createCardReqDto  = cardService.createCard(createCardReqDto, id);
         return ResponseEntity.ok().body(createCardReqDto);
     }
@@ -64,18 +53,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/cover")
     public ResponseEntity<?> updateCardCover(
-            @Valid @RequestBody UpdateCardCoverReqDto updateCardCoverReqDto, BindingResult bindingResult,  @PathVariable Long id) {
-        //유효성 검사
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody UpdateCardCoverReqDto updateCardCoverReqDto,  @PathVariable Long id) {
         updateCardCoverReqDto = cardService.updateCover(updateCardCoverReqDto, id);
         return ResponseEntity.ok().body(updateCardCoverReqDto);
     }
@@ -83,17 +61,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/description")
     public ResponseEntity<?> updateCardDescription(
-            @Valid @RequestBody UpdateCardDescReqDto updateCardDescReqDto, BindingResult bindingResult,  @PathVariable Long id) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody UpdateCardDescReqDto updateCardDescReqDto,  @PathVariable Long id) {
         updateCardDescReqDto = cardService.updateDescription(updateCardDescReqDto, id);
         return ResponseEntity.ok().body(updateCardDescReqDto);
     }
@@ -101,17 +69,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/label")
     public ResponseEntity<?> updateCardLabel(
-            @Valid @RequestBody UpdateCardLabelReqDto updateCardLabelReqDto, BindingResult bindingResult, @PathVariable Long id) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody UpdateCardLabelReqDto updateCardLabelReqDto, @PathVariable Long id) {
         updateCardLabelReqDto = cardService.updateLabel(updateCardLabelReqDto, id);
         return ResponseEntity.ok().body(updateCardLabelReqDto);
     }
@@ -119,17 +77,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/listId")
     public ResponseEntity<?> updateCardListId(
-            @Valid @RequestBody UpdateCardListReqDto updateCardListReqDto, BindingResult bindingResult, @PathVariable Long id) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody UpdateCardListReqDto updateCardListReqDto, @PathVariable Long id) {
         updateCardListReqDto = cardService.updateListId(updateCardListReqDto, id);
         return ResponseEntity.ok().body(updateCardListReqDto);
     }
@@ -137,17 +85,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/order")
     public ResponseEntity<?> updateCardOrder(
-            @Valid @RequestBody UpdateCardOrderReqDto updateCardOrderReqDto, BindingResult bindingResult, @PathVariable Long id) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody UpdateCardOrderReqDto updateCardOrderReqDto, @PathVariable Long id) {
         updateCardOrderReqDto = cardService.updateOrder(updateCardOrderReqDto, id);
         return ResponseEntity.ok().body(updateCardOrderReqDto);
     }
@@ -155,17 +93,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/title")
     public ResponseEntity<?> updateCardTitle(
-            @Valid @RequestBody UpdateCardTitleReqDto updateCardTitleReqDto, BindingResult bindingResult, @PathVariable Long id) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
+            @Valid @RequestBody UpdateCardTitleReqDto updateCardTitleReqDto, @PathVariable Long id) {
         updateCardTitleReqDto = cardService.updateTitle(updateCardTitleReqDto, id);
         return ResponseEntity.ok().body(updateCardTitleReqDto);
     }
@@ -173,7 +101,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/date")
     public ResponseEntity<?> updateCardDate(
-            @Valid @RequestBody UpdateDateReqDto updateDateReqDto, BindingResult bindingResult, @PathVariable Long id) {
+            @Valid @RequestBody UpdateDateReqDto updateDateReqDto, @PathVariable Long id) {
 
         updateDateReqDto = cardService.updateDate(updateDateReqDto, id);
         return ResponseEntity.ok().body(updateDateReqDto);
@@ -182,8 +110,7 @@ public class CardController {
 
     @PatchMapping("/card/{id}/attachment")
     public ResponseEntity<?> updateCardFile(
-            @Valid @RequestBody UpdateFileReqDto updateFileReqDto, BindingResult bindingResult, @PathVariable Long id) {
-
+            @Valid @RequestBody UpdateFileReqDto updateFileReqDto, @PathVariable Long id) {
 
         updateFileReqDto = cardService.updateFile(updateFileReqDto, id);
         return ResponseEntity.ok().body(updateFileReqDto);
