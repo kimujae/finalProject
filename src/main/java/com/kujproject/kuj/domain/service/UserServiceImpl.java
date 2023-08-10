@@ -1,6 +1,5 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.domain.board_user.Board_UserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
@@ -52,39 +51,29 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserRespDto findUserById(String userId) {
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+        UserEntity user =  userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-        if(userEntity.isPresent()) {
-           UserEntity user = userEntity.get();
-           UserRespDto userRespDto = UserRespDto.convertedBy(user).build();
-
-           return userRespDto;
-        }
-
-        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
+       UserRespDto userRespDto = UserRespDto.convertedBy(user).build();
+       return userRespDto;
     }
+
 
     @Override
     public List<BoardRespDto> findUsersBoard(String userId) {
 
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+        UserEntity user =  userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-        if(userEntity.isPresent()) {
-            UserEntity user = userEntity.get();
-            List<BoardRespDto> boards = new ArrayList<>();
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-//            }
-
-            for(Board_UserEntity board : user.getBoards()) {
-                BoardRespDto boardRespDto = BoardRespDto.convertedBy(board.getBoard()).build();
-                boards.add(boardRespDto);
-            }
-            return boards;
+        List<BoardRespDto> boards = new ArrayList<>();
+        for(Board_UserEntity board : user.getBoards()) {
+            BoardRespDto boardRespDto = BoardRespDto.convertedBy(board.getBoard()).build();
+            boards.add(boardRespDto);
         }
-
-        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        return boards;
     }
+
 
     @Override
     @Secured("ROLE_ADMIN")
@@ -99,65 +88,45 @@ public class UserServiceImpl implements UserService{
         return userRespDtoList;
     }
 
+
     @Override
     @Transactional
     public UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto) {
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+        UserEntity user =  userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-        if(userEntity.isPresent()) {
-            UserEntity user = userEntity.get();
-
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-//            }
-
-            user.changeProfile(updateProfileDto);
-            userDao.save(user);
-            return updateProfileDto;
-        }
-        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        user.changeProfile(updateProfileDto);
+        userDao.save(user);
+        return updateProfileDto;
     }
+
 
     @Override
     @Transactional
     public UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto) {
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
-
-        if(userEntity.isPresent()) {
-            UserEntity user = userEntity.get();
-
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-//            }
-
+        UserEntity user =  userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
             user.changeEmail(updateEmailDto);
-            userDao.save(user);
-            return updateEmailDto;
-        }
-        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
+
+        userDao.save(user);
+        return updateEmailDto;
     }
+
 
     @Override
     @Transactional
     public void updatePassword(String userId, UpdatePasswordDto updatePasswordDto) {
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+        UserEntity user =  userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-        if(userEntity.isPresent()) {
-            UserEntity user = userEntity.get();
-
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-//                throw new AccessDeniedException("{error : 접근 권한이 없습니다.}");
-//            }
-
-            updatePasswordDto.setPassword(passwordEncoder.encode(updatePasswordDto.getPassword()));
-            user.changePassword(updatePasswordDto);
-            userDao.save(user);
-        }
-        throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
+        updatePasswordDto.setPassword(passwordEncoder.encode(updatePasswordDto.getPassword()));
+        user.changePassword(updatePasswordDto);
+        userDao.save(user);
     }
+
 
     @Override
     @Transactional

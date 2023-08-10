@@ -2,6 +2,8 @@ package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.UserService;
 import com.kujproject.kuj.dto.user.*;
+import com.kujproject.kuj.web.common.code.SuccessCode;
+import com.kujproject.kuj.web.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,74 +22,67 @@ public class UserController {
     }
     
     @PostMapping("/user")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
-        userService.signUp(signUpReqDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(signUpReqDto);
+    public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
+
+        UserRespDto userRespDto = userService.signUp(signUpReqDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(userRespDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.CREATED);
     }
 
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<?> findUserById(@PathVariable String id) {
-        UserRespDto foundUser = userService.findUserById(id);
-        return ResponseEntity.ok().body(foundUser);
+    public ResponseEntity<ApiResponse> findUserById(@PathVariable String id) {
 
+        UserRespDto foundUser = userService.findUserById(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(foundUser)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/user/{id}/email")
-    public ResponseEntity<?> updateEmail(@PathVariable String id,
+    public ResponseEntity<ApiResponse> updateEmail(@PathVariable String id,
                                          @Valid @RequestBody UpdateEmailDto updateEmailDto) {
 
-        userService.updateEmail(id, updateEmailDto);
-        return ResponseEntity.ok().body(updateEmailDto);
-
+        updateEmailDto = userService.updateEmail(id, updateEmailDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateEmailDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/user/{id}/passwd")
-    public ResponseEntity<?> updatePassword(@PathVariable String id,
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String id,
                                          @Valid @RequestBody UpdatePasswordDto updatePasswordDto) {
 
         userService.updatePassword(id, updatePasswordDto);
-        return ResponseEntity.ok().body("패스워드 업데이트가 성공적으로 완료되었습니다.");
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result("비밀번호가 성공적으로 수정되었습니다.")
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/user/{id}/profile")
-    public ResponseEntity<?> updateProfile(@PathVariable String id,
+    public ResponseEntity<ApiResponse> updateProfile(@PathVariable String id,
                                            @Valid @RequestBody UpdateProfileDto updateProfileDto) {
 
-        userService.updateUserProfile(id, updateProfileDto);
-        return ResponseEntity.ok().body(updateProfileDto);
+        updateProfileDto = userService.updateUserProfile(id, updateProfileDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateProfileDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable String id) {
 
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(null)
+                .successCode(SuccessCode.DELETE_SUCCESS)
+                .build(), HttpStatus.NO_CONTENT);
     }
-
-//    @GetMapping("/loginform")
-//    public String loginform(){
-//        return "users/loginform";
-//    }
-//
-//    @GetMapping("/loginerror")
-//    public String loginerror(@RequestParam("login_error")String loginError){
-//        return "/users/loginerror";
-//    }
-//
-//    @GetMapping("/signinform")
-//    public String signinform(){
-//        return "/users/signinform";
-//    }
-//
-//
-//    @GetMapping("/userinfo")
-//    public String userInfo(Principal principal, ModelMap modelMap){
-//        String loginId = principal.getName();
-//        UserEntity userEntity = userService.searchUserById(loginId).get();
-//        modelMap.addAttribute("user", userEntity);
-//
-//        return "/users/userinfo";
-//    }
 }
