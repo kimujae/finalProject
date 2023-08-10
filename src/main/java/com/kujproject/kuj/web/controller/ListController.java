@@ -1,15 +1,15 @@
 package com.kujproject.kuj.web.controller;
 
-import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.domain.service.ListService;
 import com.kujproject.kuj.dto.list.CreateListReqDto;
 import com.kujproject.kuj.dto.list.ListRespDto;
-import com.kujproject.kuj.dto.list.UpdateListOrderReqDto;
-import com.kujproject.kuj.dto.list.UpdateListTitleReqDto;
+import com.kujproject.kuj.dto.list.UpdateListOrderDto;
+import com.kujproject.kuj.dto.list.UpdateListTitleDto;
+import com.kujproject.kuj.web.common.code.SuccessCode;
+import com.kujproject.kuj.web.common.response.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,66 +25,68 @@ public class ListController {
 
 
     @PostMapping("/board/{id}/list")
-    public ResponseEntity<?> createList(
+    public ResponseEntity<ApiResponse> createList(
             @Valid @RequestBody CreateListReqDto createListReqDto, @PathVariable Long id) {
-        listService.createList(createListReqDto, id);
-        return ResponseEntity.ok().body(createListReqDto);
+
+        ListRespDto listRespDto = listService.createList(id, createListReqDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(listRespDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.CREATED);
     }
 
     @GetMapping("/board/{id}/list")
-    public ResponseEntity<List<ListRespDto>> findAllListByBoardId(@PathVariable Long id) {
-        List<ListEntity> lists = listService.findAllListByBoardId(id);
-        List<ListRespDto> listsResp = new ArrayList<>();
+    public ResponseEntity<ApiResponse> findAllListByBoardId(@PathVariable Long id) {
 
-        for(ListEntity list : lists) {
-            ListRespDto l = new ListRespDto();
-            l.setListOrder(list.getListOrder());
-            l.setTitle(list.getTitle());
-
-            listsResp.add(l);
-        }
-
-        return ResponseEntity.ok().body(listsResp);
+        List<ListRespDto> listRespDtoList = listService.findAllListByBoardId(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(listRespDtoList)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @GetMapping("/list/{id}")
-    public ResponseEntity<ListRespDto> findListById(@PathVariable Long id) {
-        ListRespDto listResp = new ListRespDto();
-        ListEntity listEntity = listService.findListByListID(id);
+    public ResponseEntity<ApiResponse> findListById(@PathVariable Long id) {
 
-        listResp.setListOrder(listEntity.getListOrder());
-        listResp.setTitle(listResp.getTitle());
-
-        return ResponseEntity.ok().body(listResp);
+        ListRespDto listRespDto = listService.findListByListID(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(listRespDto)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @PatchMapping("/list/{id}/order")
-    public ResponseEntity<?> changeListOrder(
-            @PathVariable Long id, @Valid @RequestBody UpdateListOrderReqDto updateListOrderReqDto) {
-        listService.changeListOrder(id, updateListOrderReqDto);
-        return ResponseEntity.ok().body(updateListOrderReqDto);
+    public ResponseEntity<ApiResponse> changeListOrder(
+            @PathVariable Long id, @Valid @RequestBody UpdateListOrderDto updateListOrderDto) {
+
+        updateListOrderDto = listService.changeListOrder(id, updateListOrderDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateListOrderDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @PatchMapping("/list/{id}/title")
-    public ResponseEntity<?> updadteListTitle(
-            @PathVariable Long id, UpdateListTitleReqDto updateListTitleReqDto) {
-        listService.updateListTitle(id, updateListTitleReqDto);
-        return ResponseEntity.ok().body(updateListTitleReqDto);
+    public ResponseEntity<ApiResponse> updadteListTitle(
+            @PathVariable Long id, @Valid @RequestBody UpdateListTitleDto updateListTitleDto) {
 
+        updateListTitleDto = listService.updateListTitle(id, updateListTitleDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateListTitleDto)
+                .successCode(SuccessCode.UPDATE_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @DeleteMapping("/list/{id}")
-    public ResponseEntity<Boolean> deleteByListId(@PathVariable Long id) {
-        boolean isDeleted = listService.deleteList(id);
-
-        if(isDeleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse> deleteByListId(@PathVariable Long id) {
+        listService.deleteList(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(null)
+                .successCode(SuccessCode.DELETE_SUCCESS)
+                .build(), HttpStatus.NO_CONTENT);
     }
-
 }

@@ -1,18 +1,17 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.dto.list.CreateListReqDto;
 import com.kujproject.kuj.dto.list.ListRespDto;
-import com.kujproject.kuj.dto.list.UpdateListOrderReqDto;
-import com.kujproject.kuj.dto.list.UpdateListTitleReqDto;
+import com.kujproject.kuj.dto.list.UpdateListOrderDto;
+import com.kujproject.kuj.dto.list.UpdateListTitleDto;
 
 import java.util.List;
 
 public interface ListService {
-    ListEntity findListByListID(Long listId);
-    List<ListEntity> findAllListByBoardId(Long boardId);
-    UpdateListOrderReqDto changeListOrder(Long listId, UpdateListOrderReqDto updateListOrderReqDto);
-    UpdateListTitleReqDto updateListTitle(Long listId, UpdateListTitleReqDto updateListTitleReqDto);
-    ListRespDto createList(CreateListReqDto createListReqDto, Long boardId);
-    boolean deleteList(Long listId);
+    ListRespDto findListByListID(Long listId);
+    List<ListRespDto> findAllListByBoardId(Long boardId);
+    UpdateListOrderDto changeListOrder(Long listId, UpdateListOrderDto updateListOrderDto);
+    UpdateListTitleDto updateListTitle(Long listId, UpdateListTitleDto updateListTitleDto);
+    ListRespDto createList(Long boardId, CreateListReqDto createListReqDto);
+    void deleteList(Long listId);
 }
