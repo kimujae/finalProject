@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ListDao extends Repository<ListEntity, String> {
-    Optional<List<ListEntity>> findAllByBoard(BoardEntity board);
+    List<ListEntity> findAllByBoard(BoardEntity board);
     Optional<ListEntity> findByListId(Long listId);
-    Optional<ListEntity> deleteByListId(Long listId);
+    int deleteByListId(Long listId);
     ListEntity save(ListEntity list);
 }
