@@ -6,10 +6,13 @@ import com.kujproject.kuj.domain.repository.BoardDao;
 import com.kujproject.kuj.domain.repository.ListDao;
 import com.kujproject.kuj.dto.list.CreateListReqDto;
 import com.kujproject.kuj.dto.list.ListRespDto;
-import com.kujproject.kuj.dto.list.UpdateListOrderReqDto;
-import com.kujproject.kuj.dto.list.UpdateListTitleReqDto;
+import com.kujproject.kuj.dto.list.UpdateListOrderDto;
+import com.kujproject.kuj.dto.list.UpdateListTitleDto;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,86 +28,75 @@ public class ListServiceImpl implements ListService{
 
 
     @Override
-    public ListEntity findListByListID(Long listId) {
-        Optional<ListEntity> foundList = listDao.findByListId(listId);
+    public ListRespDto findListByListID(Long listId) {
+        Optional<ListEntity> listEntity = listDao.findByListId(listId);
+        ListEntity foundList = listEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
 
-        if(foundList.isPresent()) {
-           return foundList.get();
-        }
-        return null;
+        return ListRespDto.convertedBy(foundList);
     }
 
+
     @Override
-    public List<ListEntity> findAllListByBoardId(Long boardId) {
+    public List<ListRespDto> findAllListByBoardId(Long boardId) {
+        Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
+        BoardEntity board = boardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
-        Optional<BoardEntity> board = boardDao.findByBoardId(boardId);
-        if(board.isPresent()) {
-            Optional<List<ListEntity>> lists = listDao.findAllByBoard(board.get());
 
-            if(lists.isPresent()) {
-                return lists.get();
-            }
-
+        List<ListEntity> listEntityList = listDao.findAllByBoard(board);
+        List<ListRespDto> listRespDtoList = new ArrayList<>();
+        for(ListEntity list : listEntityList) {
+            listRespDtoList.add(ListRespDto.convertedBy(list));
         }
-
-        return null;
+        return listRespDtoList;
     }
 
+
     @Override
-    public UpdateListOrderReqDto changeListOrder(Long listId, UpdateListOrderReqDto updateListOrderReqDto) {
-        Optional<ListEntity> foundList = listDao.findByListId(listId);
+    public UpdateListOrderDto changeListOrder(Long listId, UpdateListOrderDto updateListOrderDto) {
+        Optional<ListEntity> listEntity = listDao.findByListId(listId);
+        ListEntity foundList = listEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
 
-        if(foundList.isPresent()) {
-            ListEntity list = foundList.get();
-            list.setListOrder(updateListOrderReqDto.getListOrder());
-
-            return updateListOrderReqDto;
-        }
-        return null;
+        foundList.changeListOrder(updateListOrderDto);
+        listDao.save(foundList);
+        return updateListOrderDto;
     }
 
+
     @Override
-    public UpdateListTitleReqDto updateListTitle(Long listId, UpdateListTitleReqDto updateListTitleReqDto) {
-        Optional<ListEntity> foundList = listDao.findByListId(listId);
+    public UpdateListTitleDto updateListTitle(Long listId, UpdateListTitleDto updateListTitleDto) {
+        Optional<ListEntity> listEntity = listDao.findByListId(listId);
+        ListEntity foundList = listEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
 
-        if(foundList.isPresent()) {
-            ListEntity list = foundList.get();
-            list.setTitle(updateListTitleReqDto.getTitle());
-
-            return updateListTitleReqDto;
-        }
-        return null;
+        foundList.changeTitle(updateListTitleDto);
+        listDao.save(foundList);
+        return updateListTitleDto;
     }
 
+
     @Override
-    public ListRespDto createList(CreateListReqDto createListReqDto, Long boardId) {
-        ListEntity list = new ListEntity();
-        Optional<BoardEntity> board = boardDao.findByBoardId(boardId);
+    public ListRespDto createList(Long boardId, CreateListReqDto createListReqDto) {
+        Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
+        BoardEntity board = boardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
+        ListEntity listEntity = ListEntity.convertedBy(createListReqDto, board);
+        listDao.save(listEntity);
 
-        if(board.isPresent()) {
-            list.setTitle(createListReqDto.getTitle());
-            list.setListOrder(createListReqDto.getListOrder());
-            list.setBoard(board.get());
-            listDao.save(list);
-
-            ListRespDto listResp = new ListRespDto();
-            listResp.setListOrder(list.getListOrder());
-            listResp.setTitle(list.getTitle());
-
-            return listResp;
-        }
-        return null;
+        ListRespDto listRespDto = ListRespDto.convertedBy(listEntity);
+        return listRespDto;
     }
 
-    @Override
-    public boolean deleteList(Long listId) {
-        boolean isDeleted = false;
-        Optional<ListEntity> list = listDao.deleteByListId(listId);
 
-        if(list.isPresent()) {
-            isDeleted = true;
+    @Override
+    public void deleteList(Long listId) {
+        int deletedCount = listDao.deleteByListId(listId);
+
+        if(deletedCount == 0) {
+            throw new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND);
         }
-        return isDeleted;
     }
 }

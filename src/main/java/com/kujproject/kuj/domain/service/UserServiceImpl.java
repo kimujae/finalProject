@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService{
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
         UserEntity user =  userEntity.orElseThrow(() ->
                 new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
-            user.changeEmail(updateEmailDto);
 
+        user.changeEmail(updateEmailDto);
         userDao.save(user);
         return updateEmailDto;
     }
