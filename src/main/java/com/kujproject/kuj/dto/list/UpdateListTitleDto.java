@@ -5,10 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateListReqDto {
+public class UpdateListTitleDto {
     @NotEmpty
     @Size(max = 15, message = "")
     String title;
-    @NotEmpty
-    int listOrder;
 }

@@ -3,8 +3,8 @@ package com.kujproject.kuj.domain.list;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.dto.list.CreateListReqDto;
-import com.kujproject.kuj.dto.list.UpdateListOrderReqDto;
-import com.kujproject.kuj.dto.list.UpdateListTitleReqDto;
+import com.kujproject.kuj.dto.list.UpdateListOrderDto;
+import com.kujproject.kuj.dto.list.UpdateListTitleDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,12 +30,12 @@ public class ListEntity {
     @JsonManagedReference
     BoardEntity board;
 
-    public void changeTitle(UpdateListTitleReqDto updateListTitleReqDto) {
-        this.title = updateListTitleReqDto.getTitle();
+    public void changeTitle(UpdateListTitleDto updateListTitleDto) {
+        this.title = updateListTitleDto.getTitle();
     }
 
-    public void changeListOrder(UpdateListOrderReqDto updateListOrderReqDto) {
-        this.listOrder = updateListOrderReqDto.getListOrder();
+    public void changeListOrder(UpdateListOrderDto updateListOrderDto) {
+        this.listOrder = updateListOrderDto.getListOrder();
     }
 
     public static ListEntity convertedBy(CreateListReqDto createListReqDto, BoardEntity board) {
