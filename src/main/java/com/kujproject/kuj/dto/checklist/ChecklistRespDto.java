@@ -1,9 +1,10 @@
 package com.kujproject.kuj.dto.checklist;
 
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

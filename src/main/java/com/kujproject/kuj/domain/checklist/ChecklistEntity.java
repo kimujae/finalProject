@@ -3,11 +3,11 @@ package com.kujproject.kuj.domain.checklist;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kujproject.kuj.domain.card.CardEntity;
 import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
+import com.kujproject.kuj.dto.checklist.CreateChecklistReqDto;
+import com.kujproject.kuj.dto.checklist.UpdateChecklistProgressDto;
+import com.kujproject.kuj.dto.checklist.UpdateChecklistTitleDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
+@Builder(builderMethodName = "builder")
 @Table(name = "checklist")
 public class ChecklistEntity {
     @Id
@@ -29,7 +29,21 @@ public class ChecklistEntity {
     @JsonManagedReference
     CardEntity card;
 
-    @OneToMany(mappedBy = "checklist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "checklist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
     List<TodoCheckEntity> check;
+
+    public void changeTitle(UpdateChecklistTitleDto updateChecklistTitleDto) {
+        this.title = updateChecklistTitleDto.getTitle();
+    }
+
+    public void changeProgress(UpdateChecklistProgressDto updateChecklistProgressDto) {
+        this.progress = updateChecklistProgressDto.getProgress();
+    }
+    public static ChecklistEntity convertedBy(CreateChecklistReqDto createChecklistReqDto, CardEntity card) {
+        return ChecklistEntity.builder()
+                .title(createChecklistReqDto.getTitle())
+                .card(card)
+                .build();
+    }
 }
