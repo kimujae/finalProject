@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CardDao extends Repository<CardEntity, String> {
     CardEntity save(CardEntity card);
-    Optional<List<CardEntity>> findCardEntitiesByList(ListEntity list);
-    Optional<CardEntity> findCardEntityByCardId(Long cardId);
-    CardEntity deleteByCardId(Long cardId);
+    List<CardEntity> findAllByList(ListEntity list);
+    Optional<CardEntity> findByCardId(Long cardId);
+    int deleteByCardId(Long cardId);
 }
