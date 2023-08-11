@@ -7,3 +7,6 @@ spring:
     show-sql : true
     logging.level.org.hibernate.SQL : DEBUG
     logging.level.org.hibernate.type.descriptor.sql.BasicBinder : TRACE
+upload :
+  path :
+    upload-images : src/main/resources/static/cardAttachment
