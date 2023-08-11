@@ -7,9 +7,11 @@ import com.kujproject.kuj.domain.repository.ChecklistDao;
 import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.checklist.CreateChecklistReqDto;
-import com.kujproject.kuj.dto.checklist.UpdateProgressReqDto;
-import com.kujproject.kuj.dto.checklist.UpdateTitleReqDto;
+import com.kujproject.kuj.dto.checklist.UpdateChecklistProgressDto;
+import com.kujproject.kuj.dto.checklist.UpdateChecklistTitleDto;
 import com.kujproject.kuj.dto.todo_check.CheckRespDto;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,88 +32,73 @@ public class ChecklistServiceImpl implements ChecklistService{
     }
 
     @Override
-    public CreateChecklistReqDto createChecklist(CreateChecklistReqDto createChecklistReqDto, Long cardId) {
-        ChecklistEntity checklist = new ChecklistEntity();
+    public ChecklistRespDto createChecklist(CreateChecklistReqDto createChecklistReqDto, Long cardId) {
         Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
+        ChecklistEntity checklist = ChecklistEntity.convertedBy(createChecklistReqDto, card);
+        checklistDao.save(checklist);
 
-            checklist.setTitle(createChecklistReqDto.getTitle());
-            checklist.setCard(card);
-
-            checklistDao.save(checklist);
-            return createChecklistReqDto;
-        }
-        return null;
+        return ChecklistRespDto.convertedBy(checklist);
     }
 
     @Override
-    public UpdateProgressReqDto updateProgress(UpdateProgressReqDto updateProgressReqDto, Long checklistId) {
-        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+    public UpdateChecklistProgressDto updateProgress(UpdateChecklistProgressDto updateChecklistProgressDto, Long checklistId) {
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findByChecklistId(checklistId);
+        ChecklistEntity checklist = checklistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CHECKLIST_NOT_FOUND));
 
-        if(checklistEntity.isPresent()) {
-            ChecklistEntity checklist = checklistEntity.get();
-            checklist.setProgress(updateProgressReqDto.getProgress());
 
-            checklistDao.save(checklist);
-            return updateProgressReqDto;
-        }
-        return null;
+        checklist.changeProgress(updateChecklistProgressDto);
+        checklistDao.save(checklist);
+
+        return updateChecklistProgressDto;
     }
 
     @Override
-    public UpdateTitleReqDto updateTitle(UpdateTitleReqDto updateTitleReqDto, Long checklistId) {
-        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+    public UpdateChecklistTitleDto updateTitle(UpdateChecklistTitleDto updateChecklistTitleDto, Long checklistId) {
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findByChecklistId(checklistId);
+        ChecklistEntity checklist = checklistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CHECKLIST_NOT_FOUND));
 
-        if(checklistEntity.isPresent()) {
-            ChecklistEntity checklist = checklistEntity.get();
-            checklist.setTitle(updateTitleReqDto.getTitle());
 
-            checklistDao.save(checklist);
-            return updateTitleReqDto;
-        }
-        return null;
+        checklist.changeTitle(updateChecklistTitleDto);
+        checklistDao.save(checklist);
+
+        return updateChecklistTitleDto;
     }
 
     @Override
     @Transactional
-    public boolean deleteChecklistById(Long checklistId) {
-        int deletedEntityCount = checklistDao.deleteByChecklistId(checklistId);
-        return true;
+    public void deleteChecklistById(Long checklistId) {
+        int deletedCount = checklistDao.deleteByChecklistId(checklistId);
+
+        if(deletedCount == 0) {
+            throw new BusinessExceptionHandler(ErrorCode.CHECKLIST_NOT_FOUND);
+        }
     }
 
     @Override
     public ChecklistRespDto findChecklistById(Long checklistId) {
-        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findByChecklistId(checklistId);
+        ChecklistEntity checklist = checklistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CHECKLIST_NOT_FOUND));
 
-        if(checklistEntity.isPresent()) {
-            ChecklistEntity checklist = checklistEntity.get();
-
-        }
-        return null;
+        return ChecklistRespDto.convertedBy(checklist);
     }
 
     @Override
     public List<CheckRespDto> findAllCheckByChecklistID(Long checklistId) {
-        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findByChecklistId(checklistId);
+        ChecklistEntity checklist = checklistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CHECKLIST_NOT_FOUND));
+
+        List<TodoCheckEntity> todoCheckList = checklist.getCheck();
         List<CheckRespDto> checkRespDtoList = new ArrayList<>();
-
-        if(checklistEntity.isPresent()) {
-            ChecklistEntity checklist = checklistEntity.get();
-            List<TodoCheckEntity> todoCheckList = checklist.getCheck();
-
-            for(TodoCheckEntity todoCheckEntity : todoCheckList) {
-                CheckRespDto checkRespDto = new CheckRespDto();
-
-                checkRespDto.setTitle(todoCheckEntity.getTitle());
-                checkRespDto.setCompleted(todoCheckEntity.isCompleted());
-                checkRespDto.setDuedate(todoCheckEntity.getDuedate());
-
-                checkRespDtoList.add(checkRespDto);
-            }
-            return checkRespDtoList;
+        for(TodoCheckEntity todoCheckEntity : todoCheckList) {
+            checkRespDtoList.add(CheckRespDto.convertedBy(todoCheckEntity));
         }
-        return null;
+        return checkRespDtoList;
     }
 }
