@@ -19,5 +19,4 @@ public class BoardRespDto {
                 .cover(boardEntity.getCover())
                 .isPublic(boardEntity.isPublic());
     }
-
 }

@@ -9,8 +9,21 @@ import com.kujproject.kuj.domain.repository.ListDao;
 import com.kujproject.kuj.dto.card.*;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.comment.CommentRespDto;
-import org.springframework.stereotype.Service;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.common.utils.FileManager;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriUtils;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,248 +33,245 @@ public class CardServiceImpl implements CardService{
 
     private final CardDao cardDao;
     private final ListDao listDao;
+    private final FileManager fileManager;
 
-    public CardServiceImpl(CardDao cardDao, ListDao listDao) {
+
+    public CardServiceImpl(CardDao cardDao, ListDao listDao, FileManager fileManager) {
         this.cardDao = cardDao;
         this.listDao = listDao;
+        this.fileManager = fileManager;
     }
 
 
     @Override
-    public CreateCardReqDto createCard(CreateCardReqDto createCardReqDto, Long listId) {
-        CardEntity card = new CardEntity();
+    public CardRespDto createCard(CreateCardReqDto createCardReqDto, Long listId) {
         Optional<ListEntity> listEntity = listDao.findByListId(listId);
+        ListEntity list = listEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
 
-        if(listEntity.isPresent()) {
-            ListEntity list = listEntity.get();
-            card.setList(list);
-            card.setTitle(createCardReqDto.getTitle());
 
-            cardDao.save(card);
-
-            return createCardReqDto;
-        }
-        // 리스트의 카드 사이즈를 가져와서 순서를 지정해야한다.
-        //card.setCardOrder();
-        return null;
+        CardEntity card = CardEntity.convertedBy(createCardReqDto, list);
+        cardDao.save(card);
+        return CardRespDto.convertedBy(card);
     }
 
     @Override
-    public UpdateCardCoverReqDto updateCover(UpdateCardCoverReqDto updateCardCoverReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    @Transactional
+    public UpdateCardCoverDto updateCover(UpdateCardCoverDto updateCardCoverDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setCover(updateCardCoverReqDto.getCover());
+        card.changeCover(updateCardCoverDto);
+        cardDao.save(card);
+        return updateCardCoverDto;
+    }
 
-            cardDao.save(card);
-            return updateCardCoverReqDto;
-        }
-        return null;
+
+    @Override
+    @Transactional
+    public UpdateCardDescDto updateDescription(UpdateCardDescDto updateCardDescDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
+
+        card.changeDescription(updateCardDescDto);
+        cardDao.save(card);
+        return updateCardDescDto;
     }
 
     @Override
-    public UpdateCardDescReqDto updateDescription(UpdateCardDescReqDto updateCardDescReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    @Transactional
+    public UpdateCardLabelDto updateLabel(UpdateCardLabelDto updateCardLabelDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setDescription(updateCardDescReqDto.getDescription());
-
-            cardDao.save(card);
-            return updateCardDescReqDto;
-        }
-        return null;
+        card.changeLabel(updateCardLabelDto);
+        cardDao.save(card);
+        return updateCardLabelDto;
     }
 
     @Override
-    public UpdateCardLabelReqDto updateLabel(UpdateCardLabelReqDto updateCardLabelReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    @Transactional
+    public UpdateCardOrderDto updateOrder(UpdateCardOrderDto updateCardOrderDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setLabel(updateCardLabelReqDto.getLabel());
-
-            cardDao.save(card);
-            return updateCardLabelReqDto;
-        }
-        return null;
+        card.changeCardOrder(updateCardOrderDto);
+        cardDao.save(card);
+        return updateCardOrderDto;
     }
 
     @Override
-    public UpdateCardOrderReqDto updateOrder(UpdateCardOrderReqDto updateCardOrderReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    @Transactional
+    public UpdateCardTitleDto updateTitle(UpdateCardTitleDto updateCardTitleDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setCardOrder(updateCardOrderReqDto.getCardOrder());
-
-            cardDao.save(card);
-            return updateCardOrderReqDto;
-        }
-        return null;
+        card.changeTitle(updateCardTitleDto);
+        cardDao.save(card);
+        return updateCardTitleDto;
     }
 
     @Override
-    public UpdateCardTitleReqDto updateTitle(UpdateCardTitleReqDto updateCardTitleReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    @Transactional
+    public UpdateCardDateDto updateDate(UpdateCardDateDto updateCardDateDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setTitle(updateCardTitleReqDto.getTitle());
-
-            cardDao.save(card);
-            return updateCardTitleReqDto;
-        }
-        return null;    }
-
-    @Override
-    public UpdateDateReqDto updateDate(UpdateDateReqDto updateDateReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
-
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setStartdate(updateDateReqDto.getStartdate());
-            card.setDuedate(updateDateReqDto.getDuedate());
-
-            cardDao.save(card);
-            return updateDateReqDto;
-        }
-        return null;
+        card.changeDate(updateCardDateDto);
+        cardDao.save(card);
+        return updateCardDateDto;
     }
 
     @Override
-    public UpdateFileReqDto updateFile(UpdateFileReqDto updateFileReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    @Transactional
+    public void updateFile(UpdateCardFilePathDto updateCardFilePathDto, Long cardId) throws IOException {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            card.setAttachmentPath(updateFileReqDto.getAttachmentPath());
+        String[] filePath = fileManager.saveFile(updateCardFilePathDto.getAttachment(), card.getStoredFileName());
 
-            cardDao.save(card);
-            return updateFileReqDto;
-        }
-        return null;
+        card.changeUploadFileName(filePath[0]);
+        card.changeStoredFileName(filePath[1]);
+        cardDao.save(card);
     }
 
     @Override
-    public UpdateCardListReqDto updateListId(UpdateCardListReqDto updateCardListReqDto, Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
-        Optional<ListEntity> listEntity = listDao.findByListId(updateCardListReqDto.getListId());
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            if(listEntity.isPresent()){
-                ListEntity list = listEntity.get();
-                card.setList(list);
+    @Transactional
+    public UpdateCardListDto updateListId(UpdateCardListDto updateCardListDto, Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        Optional<ListEntity> listEntity = listDao.findByListId(updateCardListDto.getListId());
 
-                cardDao.save(card);
-                return updateCardListReqDto;
-            }
-        }
-        return null;
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
+        ListEntity list = listEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
+
+        card.changeList(list);
+        cardDao.save(card);
+        return updateCardListDto;
     }
 
     @Override
-    public boolean deleteCardById(Long cardId) {
-        // Optional 안쓰면 무엇을 반환하는지 찾아보자
-        cardDao.deleteByCardId(cardId);
-        return true;
+    public void deleteCardById(Long cardId) {
+        int deletedCount = cardDao.deleteByCardId(cardId);
+
+        if(deletedCount == 0) {
+            throw new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND);
+        }
     }
 
     @Override
     public List<CardRespDto> findAllCardByListId(Long listId) {
-        Optional<ListEntity> listEntity= listDao.findByListId(listId);
+        Optional<ListEntity> listEntity = listDao.findByListId(listId);
+        ListEntity list = listEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
 
-        if(listEntity.isPresent()) {
-            ListEntity list = listEntity.get();
-            Optional<List<CardEntity>> cards = cardDao.findCardEntitiesByList(list);
 
-            if(cards.isPresent()) {
-                List<CardEntity> cardList = cards.get();
-                List<CardRespDto> cardRespDtoList = new ArrayList<>();
-                for (CardEntity card : cardList) {
-                    CardRespDto cardRespDto = new CardRespDto();
-
-                    cardRespDto.setCardOrder(card.getCardOrder());
-                    cardRespDto.setDescription(card.getDescription());
-                    cardRespDto.setStartdate(card.getStartdate());
-                    cardRespDto.setDuedate(card.getDuedate());
-                    cardRespDto.setCover(card.getCover());
-                    cardRespDto.setLabel(card.getLabel());
-                    cardRespDto.setAttachmentPath(card.getAttachmentPath());
-                    cardRespDto.setTitle(card.getTitle());
-
-                    cardRespDtoList.add(cardRespDto);
-                }
-                return cardRespDtoList;
-            }
+        List<CardEntity> cardList = cardDao.findAllByList(list);
+        List<CardRespDto> cardRespDtoList = new ArrayList<>();
+        for (CardEntity card : cardList) {
+            cardRespDtoList.add(CardRespDto.convertedBy(card));
         }
-        return null;
+        return cardRespDtoList;
     }
 
+
     @Override
-    public CardRespDto findCardByCardId(Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+    public CardRespDto findCardByCardId(Long cardId) throws IOException {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            CardRespDto cardRespDto = new CardRespDto();
-
-            cardRespDto.setCardOrder(card.getCardOrder());
-            cardRespDto.setDescription(card.getDescription());
-            cardRespDto.setStartdate(card.getStartdate());
-            cardRespDto.setDuedate(card.getDuedate());
-            cardRespDto.setCover(card.getCover());
-            cardRespDto.setLabel(card.getLabel());
-            cardRespDto.setAttachmentPath(card.getAttachmentPath());
-            cardRespDto.setTitle(card.getTitle());
-
-            return cardRespDto;
-        }
-        return null;
+        String downloadFilePath = "card/" + card.getCardId() + "/attachment";
+        return CardRespDto.convertedBy(card, downloadFilePath);
     }
 
     @Override
     public List<ChecklistRespDto> findAllChecklistByCardId(Long cardId) {
-        List<ChecklistEntity> checklistEntityList;
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
+
+        List<ChecklistEntity>checklistEntityList = card.getChecklist();
         List<ChecklistRespDto> checklistRespDtoList = new ArrayList<>();
-
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            checklistEntityList = card.getChecklist();
-
-            for(ChecklistEntity checklist : checklistEntityList) {
-                ChecklistRespDto checklistRespDto = new ChecklistRespDto();
-                checklistRespDto.setTitle(checklist.getTitle());
-                checklistRespDto.setProgress(checklist.getProgress());
-
-                checklistRespDtoList.add(checklistRespDto);
-            }
-            return checklistRespDtoList;
+        for(ChecklistEntity checklist : checklistEntityList) {
+            checklistRespDtoList.add(ChecklistRespDto.convertedBy(checklist));
         }
-        return null;
+
+        return checklistRespDtoList;
     }
+
 
     @Override
     public List<CommentRespDto> findAllCommentByCardId(Long cardId) {
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            CardEntity card = cardEntity.get();
-            List<CommentRespDto> commentRespDtoList = new ArrayList<>();
+        List<CommentEntity> commentEntityList = card.getComment();
+        List<CommentRespDto> commentRespDtoList = new ArrayList<>();
+        String userId =""; // 세션정보 가져오기
 
-            List<CommentEntity> commentEntityList = card.getComment();
-            for(CommentEntity commentEntity : commentEntityList) {
-                CommentRespDto commentRespDto = new CommentRespDto();
-
-                commentRespDto.setContent(commentEntity.getContent());
-                commentRespDto.setUserId(commentEntity.getUser().getUserId());
-
-                commentRespDtoList.add(commentRespDto);
-            }
-            return commentRespDtoList;
+        for(CommentEntity commentEntity : commentEntityList) {
+            commentRespDtoList.add(CommentRespDto.convertedBy(commentEntity, userId));
         }
-        return null;
+        return commentRespDtoList;
     }
+
+    public ResponseEntity<?> downloadCardAttachment(Long cardId) throws IOException {
+            Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+            CardEntity card = cardEntity.orElseThrow(() ->
+                    new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
+
+            String uploadFileName = card.getUploadFileName();
+            String storedFileName = card.getStoredFileName();
+            String filePath = fileManager.loadFilePath(storedFileName).toString();
+
+            UrlResource resource = new UrlResource("file:" + filePath);
+            String encodedUploadFileName = UriUtils.encode(uploadFileName,
+                    StandardCharsets.UTF_8);
+
+            String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+    }
+
+    @Override
+    public void deleteCardAttachment(Long cardId) throws IOException {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
+
+        // 파일 삭제 로직
+        Path filePath = fileManager.loadFilePath(card.getStoredFileName());
+        if(Files.exists(filePath)) {
+            Files.delete(filePath);
+        }
+
+
+        card.changeStoredFileName(null);
+        card.changeUploadFileName(null);
+        cardDao.save(card);
+    }
+
+    @Override
+    public void deleteCardDate(Long cardId) {
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
+
+        UpdateCardDateDto updateCardDateDto = new UpdateCardDateDto();
+        card.changeDate(updateCardDateDto);
+        cardDao.save(card);
+    }
+
+
 }

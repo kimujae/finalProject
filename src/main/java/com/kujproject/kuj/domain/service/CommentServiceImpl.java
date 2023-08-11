@@ -31,13 +31,13 @@ public class CommentServiceImpl implements CommentService{
         Optional<CommentEntity> commentEntity = commentDao.findByCommentId(commentId);
 
         if(commentEntity.isPresent()) {
-            CommentRespDto commentRespDto = new CommentRespDto();
-            CommentEntity comment = commentEntity.get();
+ //           CommentRespDto commentRespDto = new CommentRespDto();
+//            CommentEntity comment = commentEntity.get();
+//
+//            commentRespDto.setContent(comment.getContent());
+//            commentRespDto.setUserId(comment.getUser().getUserId());
 
-            commentRespDto.setContent(comment.getContent());
-            commentRespDto.setUserId(comment.getUser().getUserId());
-
-            return commentRespDto;
+           // return commentRespDto;
         }
         return null;
     }
@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public CreateCommentReqDto createComment(CreateCommentReqDto createCommentReqDto, Long cardId) {
         CommentEntity commentEntity = new CommentEntity();
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
 
         if(cardEntity.isPresent()) {
             Optional<UserEntity> userEntity = userDao.findByUserId(createCommentReqDto.getUserId());

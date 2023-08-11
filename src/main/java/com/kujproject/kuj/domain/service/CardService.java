@@ -1,11 +1,11 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.checklist.ChecklistEntity;
-import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.dto.card.*;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.comment.CommentRespDto;
+import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CardService {
@@ -17,18 +17,21 @@ public interface CardService {
         4. 카드 읽어오기
         5. 리스트의 카드들 모두 가져오기
      */
-    CreateCardReqDto createCard(CreateCardReqDto createCardReqDto, Long listId);
-    UpdateCardCoverReqDto updateCover(UpdateCardCoverReqDto updateCardCoverReqDto, Long cardId);
-    UpdateCardDescReqDto updateDescription(UpdateCardDescReqDto updateCardDescReqDto, Long cardId);
-    UpdateCardLabelReqDto updateLabel(UpdateCardLabelReqDto updateCardLabelReqDto, Long cardId);
-    UpdateCardOrderReqDto updateOrder(UpdateCardOrderReqDto updateCardOrderReqDto, Long cardId);
-    UpdateCardTitleReqDto updateTitle(UpdateCardTitleReqDto updateCardTitleReqDto, Long cardId);
-    UpdateDateReqDto updateDate(UpdateDateReqDto updateDateReqDto, Long cardId);
-    UpdateFileReqDto updateFile(UpdateFileReqDto updateFileReqDto, Long cardId);
-    UpdateCardListReqDto updateListId(UpdateCardListReqDto updateCardListReqDto, Long cardId);
-    boolean deleteCardById(Long cardId);
+    CardRespDto createCard(CreateCardReqDto createCardReqDto, Long listId);
+    UpdateCardCoverDto updateCover(UpdateCardCoverDto updateCardCoverDto, Long cardId);
+    UpdateCardDescDto updateDescription(UpdateCardDescDto updateCardDescDto, Long cardId);
+    UpdateCardLabelDto updateLabel(UpdateCardLabelDto updateCardLabelDto, Long cardId);
+    UpdateCardOrderDto updateOrder(UpdateCardOrderDto updateCardOrderDto, Long cardId);
+    UpdateCardTitleDto updateTitle(UpdateCardTitleDto updateCardTitleDto, Long cardId);
+    UpdateCardDateDto updateDate(UpdateCardDateDto updateCardDateDto, Long cardId);
+    void updateFile(UpdateCardFilePathDto updateCardFilePathDto, Long cardId) throws IOException;
+    UpdateCardListDto updateListId(UpdateCardListDto updateCardListDto, Long cardId);
+    void deleteCardById(Long cardId);
     List<CardRespDto> findAllCardByListId(Long listId);
-    CardRespDto findCardByCardId(Long cardId);
+    CardRespDto findCardByCardId(Long cardId) throws IOException;
     List<ChecklistRespDto> findAllChecklistByCardId(Long cardId);
     List<CommentRespDto> findAllCommentByCardId(Long cardId);
+    ResponseEntity<?> downloadCardAttachment(Long cardId) throws IOException;
+    void deleteCardAttachment(Long cardId) throws IOException;
+    void deleteCardDate(Long cardId);
 }

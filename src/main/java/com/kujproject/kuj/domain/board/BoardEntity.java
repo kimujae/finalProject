@@ -49,11 +49,12 @@ public class BoardEntity{
     }
 
 
-    public static BoardEntityBuilder convertedBy(CreateBoardReqDto createBoardReqDto) {
+    public static BoardEntity convertedBy(CreateBoardReqDto createBoardReqDto) {
         return BoardEntity.Builder()
                 .title(createBoardReqDto.getTitle())
                 .cover(createBoardReqDto.getCover())
-                .isPublic(createBoardReqDto.isPublic());
+                .isPublic(createBoardReqDto.isPublic())
+                .build();
     }
 
 }

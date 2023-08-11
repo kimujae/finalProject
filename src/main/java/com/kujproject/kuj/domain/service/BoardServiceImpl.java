@@ -50,7 +50,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardRespDto createNewBoard(CreateBoardReqDto createBoardReqDto) {
-        BoardEntity board = BoardEntity.convertedBy(createBoardReqDto).build();
+        BoardEntity board = BoardEntity.convertedBy(createBoardReqDto);
         boardDao.save(board);
 
         return BoardRespDto.convertedBy(board).build();

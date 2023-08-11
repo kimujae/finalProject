@@ -32,7 +32,7 @@ public class ChecklistServiceImpl implements ChecklistService{
     @Override
     public CreateChecklistReqDto createChecklist(CreateChecklistReqDto createChecklistReqDto, Long cardId) {
         ChecklistEntity checklist = new ChecklistEntity();
-        Optional<CardEntity> cardEntity = cardDao.findCardEntityByCardId(cardId);
+        Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
 
         if(cardEntity.isPresent()) {
             CardEntity card = cardEntity.get();
@@ -88,12 +88,6 @@ public class ChecklistServiceImpl implements ChecklistService{
         if(checklistEntity.isPresent()) {
             ChecklistEntity checklist = checklistEntity.get();
 
-            ChecklistRespDto checklistRespDto = new ChecklistRespDto();
-            checklistRespDto.setTitle(checklist.getTitle());
-            checklistRespDto.setProgress(checklist.getProgress());
-
-            checklistDao.save(checklist);
-            return checklistRespDto;
         }
         return null;
     }
