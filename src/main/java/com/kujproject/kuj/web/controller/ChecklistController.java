@@ -1,23 +1,19 @@
 package com.kujproject.kuj.web.controller;
 
-import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.service.CardService;
 import com.kujproject.kuj.domain.service.ChecklistService;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.checklist.CreateChecklistReqDto;
-import com.kujproject.kuj.dto.checklist.UpdateProgressReqDto;
-import com.kujproject.kuj.dto.checklist.UpdateTitleReqDto;
+import com.kujproject.kuj.dto.checklist.UpdateChecklistProgressDto;
+import com.kujproject.kuj.dto.checklist.UpdateChecklistTitleDto;
+import com.kujproject.kuj.web.common.code.SuccessCode;
+import com.kujproject.kuj.web.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ChecklistController {
@@ -30,12 +26,15 @@ public class ChecklistController {
     }
 
     @PostMapping("/card/{id}/checklist")
-    public ResponseEntity<?> createChecklist(
+    public ResponseEntity<ApiResponse> createChecklist(
             @PathVariable Long id, @Valid @RequestBody CreateChecklistReqDto createChecklistReqDto) {
-        checklistService.createChecklist(createChecklistReqDto, id);
-        return ResponseEntity.ok().body(createChecklistReqDto);
-    }
 
+        ChecklistRespDto checklistRespDto = checklistService.createChecklist(createChecklistReqDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(checklistRespDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.CREATED);
+    }
 
     /*
         List<Entity> 를 반환하려하면 json 직렬화 문제 발생 -> 무한루프 -> 해결방안은 찾아야된다.
@@ -43,48 +42,57 @@ public class ChecklistController {
         어떻게 해결하는 것이 나을까?
      */
     @GetMapping("/card/{id}/checklist")
-    public ResponseEntity<List<ChecklistRespDto>> findAllChecklist(@PathVariable Long id) {
-        List<ChecklistRespDto> checklistRespDtoList = cardService.findAllChecklistByCardId(id);
+    public ResponseEntity<ApiResponse> findAllChecklist(@PathVariable Long id) {
 
-        if(checklistRespDtoList != null) {
-            return ResponseEntity.ok().body(checklistRespDtoList);
-        }
-        return null;
+        List<ChecklistRespDto> checklistRespDtoList = cardService.findAllChecklistByCardId(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(checklistRespDtoList)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
-    @GetMapping("/checklist/{id}")
-    public ResponseEntity<ChecklistRespDto> findChecklistById(@PathVariable Long id) {
-        ChecklistRespDto checklistRespDto = checklistService.findChecklistById(id);
 
-        if(checklistRespDto != null) {
-            return ResponseEntity.ok().body(checklistRespDto);
-        }
-        return ResponseEntity.notFound().build();
+    @GetMapping("/checklist/{id}")
+    public ResponseEntity<ApiResponse> findChecklistById(@PathVariable Long id) {
+
+        ChecklistRespDto checklistRespDto = checklistService.findChecklistById(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(checklistRespDto)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/checklist/{id}/progress")
     public ResponseEntity<?> updateProgress(
-            @PathVariable Long id, @Valid @RequestBody UpdateProgressReqDto updateProgressReqDto) {
-        checklistService.updateProgress(updateProgressReqDto, id);
-        return ResponseEntity.ok().body(updateProgressReqDto);
+            @PathVariable Long id, @Valid @RequestBody UpdateChecklistProgressDto updateChecklistProgressDto) {
+
+        updateChecklistProgressDto = checklistService.updateProgress(updateChecklistProgressDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateChecklistProgressDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @PatchMapping("/checklist/{id}/title")
     public ResponseEntity<?> updateTitle(
-            @PathVariable Long id, @Valid @RequestBody UpdateTitleReqDto updateTitleReqDto) {
-        checklistService.updateTitle(updateTitleReqDto, id);
-        return ResponseEntity.ok().body(updateTitleReqDto);
+            @PathVariable Long id, @Valid @RequestBody UpdateChecklistTitleDto updateChecklistTitleDto) {
+
+        updateChecklistTitleDto = checklistService.updateTitle(updateChecklistTitleDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateChecklistTitleDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @DeleteMapping("/checklist/{id}")
     public ResponseEntity<?> deleteChecklistById(@PathVariable Long id) {
-        boolean isDeleted = checklistService.deleteChecklistById(id);
 
-        if(isDeleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        checklistService.deleteChecklistById(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(null)
+                .successCode(SuccessCode.DELETE_SUCCESS)
+                .build(), HttpStatus.NO_CONTENT);
     }
 }
