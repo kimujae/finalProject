@@ -7,6 +7,8 @@ import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.domain.todo_check.TodoCheckEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.todo_check.*;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,7 @@ public class TodoCheckServiceImpl implements TodoCheckService{
     @Override
     public CreateCheckReqDto createCheck(CreateCheckReqDto createCheckReqDto, Long checklistId) {
         TodoCheckEntity todoCheck = new TodoCheckEntity();
-        Optional<ChecklistEntity> checklistEntity = checklistDao.findChecklistEntityByChecklistId(checklistId);
+        Optional<ChecklistEntity> checklistEntity = checklistDao.findByChecklistId(checklistId);
 
         if(checklistEntity.isPresent()) {
             ChecklistEntity checklist = checklistEntity.get();
@@ -102,17 +104,9 @@ public class TodoCheckServiceImpl implements TodoCheckService{
     @Override
     public CheckRespDto findCheckById(Long checkId) {
         Optional<TodoCheckEntity> todoCheckEntity = todoCheckDao.findTodoCheckEntityByCheckId(checkId);
+        TodoCheckEntity todoCheck = todoCheckEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.TODOCHECK_NOT_FOUND));
 
-        if(todoCheckEntity.isPresent()) {
-            TodoCheckEntity todoCheck = todoCheckEntity.get();
-
-            CheckRespDto checkRespDto = new CheckRespDto();
-            checkRespDto.setCompleted(todoCheck.isCompleted());
-            checkRespDto.setDuedate(todoCheck.getDuedate());
-            checkRespDto.setTitle(todoCheck.getTitle());
-
-            return checkRespDto;
-        }
-        return null;
+        return CheckRespDto.convertedBy(todoCheck);
     }
 }
