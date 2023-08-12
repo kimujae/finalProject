@@ -3,6 +3,8 @@ package com.kujproject.kuj.web.controller;
 import com.kujproject.kuj.domain.service.ChecklistService;
 import com.kujproject.kuj.domain.service.TodoCheckService;
 import com.kujproject.kuj.dto.todo_check.*;
+import com.kujproject.kuj.web.common.code.SuccessCode;
+import com.kujproject.kuj.web.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,67 +29,78 @@ public class TodoCheckController {
 
 
     @PostMapping("/checklist/{id}/todoCheck")
-    public ResponseEntity<CreateCheckReqDto> createCheck(
+    public ResponseEntity<ApiResponse> createCheck(
             @PathVariable Long id, @Valid @RequestBody  CreateCheckReqDto createCheckReqDto) {
 
-        CreateCheckReqDto checkReqDto = todoCheckService.createCheck(createCheckReqDto, id);
-        if(checkReqDto != null) {
-            return ResponseEntity.ok().body(createCheckReqDto);
-        }
-        return ResponseEntity.notFound().build();
+        CheckRespDto checkRespDto = todoCheckService.createCheck(createCheckReqDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(checkRespDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.CREATED);
     }
 
 
     @GetMapping("/checklist/{id}/todoCheck")
-    public ResponseEntity<List<CheckRespDto>> findAllCheckByChecklistId(@PathVariable Long id) {
-        List<CheckRespDto> todoCheckList = checklistService.findAllCheckByChecklistID(id);
+    public ResponseEntity<ApiResponse> findAllCheckByChecklistId(@PathVariable Long id) {
 
-        if(todoCheckList != null) {
-            return ResponseEntity.ok().body(todoCheckList);
-        }
-        return ResponseEntity.notFound().build();
+        List<CheckRespDto> todoCheckList = checklistService.findAllCheckByChecklistID(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(todoCheckList)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @GetMapping("todoCheck/{id}")
-    public ResponseEntity<CheckRespDto> findCheckByCheckId(@PathVariable Long id) {
-        CheckRespDto checkRespDto = todoCheckService.findCheckById(id);
+    public ResponseEntity<ApiResponse> findCheckByCheckId(@PathVariable Long id) {
 
-        if(checkRespDto != null) {
-            return ResponseEntity.ok().body(checkRespDto);
-        }
-        return ResponseEntity.notFound().build();
+        CheckRespDto checkRespDto = todoCheckService.findCheckById(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(checkRespDto)
+                .successCode(SuccessCode.SELECT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/todoCheck/{id}/completed")
-    public ResponseEntity<?> updateCompleted(
+    public ResponseEntity<ApiResponse> updateCompleted(
             @PathVariable Long id, @Valid @RequestBody UpdateCompletedReqDto updateCompletedReqDto) {
-        todoCheckService.updateCompleted(updateCompletedReqDto, id);
-        return ResponseEntity.ok().body(updateCompletedReqDto);
+
+        updateCompletedReqDto = todoCheckService.updateCompleted(updateCompletedReqDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateCompletedReqDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/todoCheck/{id}/duedate")
-    public ResponseEntity<?> updateDate(
+    public ResponseEntity<ApiResponse> updateDate(
             @PathVariable Long id, @Valid @RequestBody UpdateDateReqDto updateDateReqDto) {
-        todoCheckService.updateDate(updateDateReqDto, id);
-        return ResponseEntity.ok().body(updateDateReqDto);
+
+        updateDateReqDto = todoCheckService.updateDate(updateDateReqDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateDateReqDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
     @PatchMapping("/todoCheck/{id}/title")
-    public ResponseEntity<?> updateTitle(
+    public ResponseEntity<ApiResponse> updateTitle(
             @PathVariable Long id, @Valid @RequestBody UpdateTitleReqDto updateTitleReqDto) {
-        todoCheckService.updateTitle(updateTitleReqDto, id);
-        return ResponseEntity.ok().body(updateTitleReqDto);
+
+        updateTitleReqDto = todoCheckService.updateTitle(updateTitleReqDto, id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(updateTitleReqDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
     }
 
 
     @DeleteMapping("todoCheck/{id}")
-    public ResponseEntity<HttpStatus> deleteCheckById(@PathVariable Long id) {
-        boolean isDeleted;
-        isDeleted = todoCheckService.deleteCheckById(id);
+    public ResponseEntity<ApiResponse> deleteCheckById(@PathVariable Long id) {
 
-        if(isDeleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        todoCheckService.deleteCheckById(id);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(null)
+                .successCode(SuccessCode.DELETE_SUCCESS)
+                .build(), HttpStatus.NO_CONTENT);
     }
 }

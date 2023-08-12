@@ -1,6 +1,7 @@
 package com.kujproject.kuj.dto.comment;
 
 import com.kujproject.kuj.domain.comment.CommentEntity;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

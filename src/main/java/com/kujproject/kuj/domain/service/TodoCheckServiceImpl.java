@@ -28,77 +28,65 @@ public class TodoCheckServiceImpl implements TodoCheckService{
 
 
     @Override
-    public CreateCheckReqDto createCheck(CreateCheckReqDto createCheckReqDto, Long checklistId) {
-        TodoCheckEntity todoCheck = new TodoCheckEntity();
+    public CheckRespDto createCheck(CreateCheckReqDto createCheckReqDto, Long checklistId) {
         Optional<ChecklistEntity> checklistEntity = checklistDao.findByChecklistId(checklistId);
+        ChecklistEntity checklist = checklistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CHECKLIST_NOT_FOUND));
 
-        if(checklistEntity.isPresent()) {
-            ChecklistEntity checklist = checklistEntity.get();
-            Optional<UserEntity> userEntity = userDao.findByUserId(createCheckReqDto.getUserId());
 
-            if(userEntity.isPresent()) {
-                UserEntity user = userEntity.get();
+        Optional<UserEntity> userEntity = userDao.findByUserId(createCheckReqDto.getUserId());
+        UserEntity user = userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-                todoCheck.setTitle(createCheckReqDto.getTitle());
-                todoCheck.setChecklist(checklist);
-                todoCheck.setDuedate(createCheckReqDto.getDuedate());
-                todoCheck.setCompleted(createCheckReqDto.isCompleted());
-                todoCheck.setUser(user);
+        TodoCheckEntity todoCheck = TodoCheckEntity.convertedBy(createCheckReqDto, checklist, user);
+        todoCheckDao.save(todoCheck);
 
-                todoCheckDao.save(todoCheck);
-                return createCheckReqDto;
-            }
-        }
-        return null;
+        return CheckRespDto.convertedBy(todoCheck);
     }
 
     @Override
     @Transactional
-    public boolean deleteCheckById(Long checkId) {
-        int deletedEntityCount = todoCheckDao.deleteByCheckId(checkId);
-        return true;
+    public void deleteCheckById(Long checkId) {
+        int deletedCount = todoCheckDao.deleteByCheckId(checkId);
+        if(deletedCount == 0) {
+            throw new BusinessExceptionHandler(ErrorCode.TODOCHECK_NOT_FOUND);
+        }
     }
 
     @Override
     public UpdateCompletedReqDto updateCompleted(UpdateCompletedReqDto updateCompletedReqDto, Long checkId) {
         Optional<TodoCheckEntity> checkEntity = todoCheckDao.findTodoCheckEntityByCheckId(checkId);
+        TodoCheckEntity todoCheck = checkEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.TODOCHECK_NOT_FOUND));
 
-        if(checkEntity.isPresent()) {
-            TodoCheckEntity check = checkEntity.get();
 
-            check.setCompleted(updateCompletedReqDto.isCompleted());
-            todoCheckDao.save(check);
-            return updateCompletedReqDto;
-        }
-        return null;
+        todoCheck.changeCompleted(updateCompletedReqDto);
+        todoCheckDao.save(todoCheck);
+        return updateCompletedReqDto;
     }
 
     @Override
     public UpdateDateReqDto updateDate(UpdateDateReqDto updateDateReqDto, Long checkId) {
         Optional<TodoCheckEntity> checkEntity = todoCheckDao.findTodoCheckEntityByCheckId(checkId);
+        TodoCheckEntity todoCheck = checkEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.TODOCHECK_NOT_FOUND));
 
-        if(checkEntity.isPresent()) {
-            TodoCheckEntity check = checkEntity.get();
 
-            check.setDuedate(updateDateReqDto.getDuedate());
-            todoCheckDao.save(check);
-            return updateDateReqDto;
-        }
-        return null;
+        todoCheck.changeDate(updateDateReqDto);
+        todoCheckDao.save(todoCheck);
+        return updateDateReqDto;
     }
 
     @Override
     public UpdateTitleReqDto updateTitle(UpdateTitleReqDto updateTitleReqDto, Long checkId) {
         Optional<TodoCheckEntity> checkEntity = todoCheckDao.findTodoCheckEntityByCheckId(checkId);
+        TodoCheckEntity todoCheck = checkEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.TODOCHECK_NOT_FOUND));
 
-        if(checkEntity.isPresent()) {
-            TodoCheckEntity check = checkEntity.get();
 
-            check.setTitle(updateTitleReqDto.getTitle());
-            todoCheckDao.save(check);
-            return updateTitleReqDto;
-        }
-        return null;
+        todoCheck.changeTitle(updateTitleReqDto);
+        todoCheckDao.save(todoCheck);
+        return updateTitleReqDto;
     }
 
     @Override
