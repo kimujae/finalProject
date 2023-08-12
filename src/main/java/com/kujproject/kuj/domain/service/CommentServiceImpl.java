@@ -9,6 +9,8 @@ import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.comment.CommentRespDto;
 import com.kujproject.kuj.dto.comment.CreateCommentReqDto;
 import com.kujproject.kuj.dto.comment.UpdateContentReqDto;
+import com.kujproject.kuj.web.common.code.ErrorCode;
+import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,61 +31,48 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public CommentRespDto findCommentById(Long commentId) {
         Optional<CommentEntity> commentEntity = commentDao.findByCommentId(commentId);
+        CommentEntity comment = commentEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
 
-        if(commentEntity.isPresent()) {
- //           CommentRespDto commentRespDto = new CommentRespDto();
-//            CommentEntity comment = commentEntity.get();
-//
-//            commentRespDto.setContent(comment.getContent());
-//            commentRespDto.setUserId(comment.getUser().getUserId());
 
-           // return commentRespDto;
-        }
-        return null;
+        return CommentRespDto.convertedBy(comment, comment.getUser().getUserId());
+
     }
 
     @Override
-    public CreateCommentReqDto createComment(CreateCommentReqDto createCommentReqDto, Long cardId) {
-        CommentEntity commentEntity = new CommentEntity();
+    public CommentRespDto createComment(CreateCommentReqDto createCommentReqDto, Long cardId) {
         Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
+        CardEntity card = cardEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
 
-        if(cardEntity.isPresent()) {
-            Optional<UserEntity> userEntity = userDao.findByUserId(createCommentReqDto.getUserId());
-            if(userEntity.isPresent()) {
-                UserEntity user = userEntity.get();
-                CardEntity card = cardEntity.get();
+         Optional<UserEntity> userEntity = userDao.findByUserId(createCommentReqDto.getUserId());
+         UserEntity user = userEntity.orElseThrow(() ->
+                 new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-                commentEntity.setContent(createCommentReqDto.getContent());
-                commentEntity.setCard(card);
-                commentEntity.setUser(user);
+        CommentEntity comment = CommentEntity.convertedBy(createCommentReqDto, card, user);
+        commentDao.save(comment);
 
-                commentDao.save(commentEntity);
-                return createCommentReqDto;
-            }
-            return null;
-        }
-        return null;
+        return CommentRespDto.convertedBy(comment, user.getUserId());
     }
 
     @Override
     public UpdateContentReqDto updateContent(UpdateContentReqDto updateContentReqDto, Long commentId) {
         Optional<CommentEntity> commentEntity = commentDao.findByCommentId(commentId);
+        CommentEntity comment = commentEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.COMMENT_NOT_FOUND));
 
-        if(commentEntity.isPresent()) {
-            CommentEntity comment = commentEntity.get();
+        comment.changeContent(updateContentReqDto);
+        commentDao.save(comment);
 
-            comment.setContent(updateContentReqDto.getContent());
-            commentDao.save(comment);
-
-            return updateContentReqDto;
-        }
-        return null;
+        return updateContentReqDto;
     }
 
     @Override
     @Transactional
-    public boolean deleteComment(Long commentId) {
-        int deletedCommentCount = commentDao.deleteByCommentId(commentId);
-        return true;
+    public void deleteComment(Long commentId) {
+        int deletedCount = commentDao.deleteByCommentId(commentId);
+        if(deletedCount == 0) {
+            throw new BusinessExceptionHandler(ErrorCode.COMMENT_NOT_FOUND);
+        }
     }
 }

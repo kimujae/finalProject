@@ -6,7 +6,7 @@ import com.kujproject.kuj.dto.comment.UpdateContentReqDto;
 
 public interface CommentService {
     CommentRespDto findCommentById(Long commentId);
-    CreateCommentReqDto createComment(CreateCommentReqDto createCommentReqDto, Long cardId);
+    CommentRespDto createComment(CreateCommentReqDto createCommentReqDto, Long cardId);
     UpdateContentReqDto updateContent(UpdateContentReqDto updateContentReqDto, Long commentId);
-    boolean deleteComment(Long commentId);
+    void deleteComment(Long commentId);
 }
