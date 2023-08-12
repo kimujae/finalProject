@@ -2,17 +2,16 @@ package com.kujproject.kuj.domain.comment;
 
 import com.kujproject.kuj.domain.card.CardEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
+import com.kujproject.kuj.dto.comment.CreateCommentReqDto;
+import com.kujproject.kuj.dto.comment.UpdateContentReqDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
+@Builder(builderMethodName = "builder")
 @Table(name = "comment")
 public class CommentEntity {
     @Id
@@ -27,4 +26,17 @@ public class CommentEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     UserEntity user;
+
+
+    public void changeContent(UpdateContentReqDto updateContentReqDto) {
+        this.content = updateContentReqDto.getContent();
+    }
+
+    public static CommentEntity convertedBy(CreateCommentReqDto createCommentReqDto, CardEntity card, UserEntity user) {
+        return CommentEntity.builder()
+                .content(createCommentReqDto.getContent())
+                .card(card)
+                .user(user)
+                .build();
+    }
 }
