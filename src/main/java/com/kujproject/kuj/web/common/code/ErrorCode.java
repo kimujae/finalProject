@@ -74,7 +74,13 @@ public enum ErrorCode {
 
     BOARD_NOT_FOUND(404, "", "Board Not Found"),
 
+
+    MEETINGTIME_NOT_FOUND(404, "", "MeetineTime Not Found"),
+
+
     BUSINESS_EXCEPTION_ERROR(200, "B999", "Business Exception Error"),
+
+
 
 //    // Transaction Insert Error
 //    INSERT_ERROR(200, "9999", "Insert Transaction Error Exception"),
