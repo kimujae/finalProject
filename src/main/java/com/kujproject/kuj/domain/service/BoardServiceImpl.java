@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BoardServiceImpl implements BoardService{
@@ -38,7 +39,7 @@ public class BoardServiceImpl implements BoardService{
             new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
 
-        List<Board_UserEntity> foundUsers = board.getUsers();
+        Set<Board_UserEntity> foundUsers = board.getUsers();
         List<UserRespDto> members = new ArrayList<>();
         for (Board_UserEntity user : foundUsers) {
             UserRespDto userRespDto = UserRespDto.convertedBy(user.getUser()).build();

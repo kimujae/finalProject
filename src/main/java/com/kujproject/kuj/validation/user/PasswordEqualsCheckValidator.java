@@ -18,7 +18,7 @@ public class PasswordEqualsCheckValidator implements ConstraintValidator<EqualsF
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         if(value == null) {
-            return true;
+            return false;
         }
         try {
             Object fieldValue1 = BeanUtils.getPropertyDescriptor(value.getClass(), password).getReadMethod().invoke(value);
