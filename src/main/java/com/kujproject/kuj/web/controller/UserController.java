@@ -4,9 +4,11 @@ import com.kujproject.kuj.domain.service.UserService;
 import com.kujproject.kuj.dto.user.*;
 import com.kujproject.kuj.web.common.code.SuccessCode;
 import com.kujproject.kuj.web.common.response.ApiResponse;
+import com.kujproject.kuj.web.common.utils.TokenUtils;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +34,11 @@ public class UserController {
     }
 
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<ApiResponse> findUserById(@PathVariable String id) {
+    @GetMapping("/user")
+    public ResponseEntity<ApiResponse> findUserById() {
 
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        //System.out.println(id);
         UserRespDto foundUser = userService.findUserById(id);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(foundUser)
