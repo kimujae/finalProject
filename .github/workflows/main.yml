@@ -68,6 +68,6 @@ jobs:
         aws deploy create-deployment \
         --application-name planner-api\
         --deployment-group-name planner-api-group\
-        --file-exists-behavior OVERWRITE \
+        --file-exists-behavior=OVERWRITE \
         --s3-location bucket=planner-api-deploy,bundleType=zip,key=planner-api-deploy.zip\ 
         --region ap-northeast-2
