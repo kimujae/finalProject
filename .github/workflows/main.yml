@@ -34,6 +34,16 @@ jobs:
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
 
+       # appspec.yml 파일 복사
+    - name: Copy appspec.yml
+      run: cp appspec.yml ./deploy
+
+
+    # script files 복사
+    - name: Copy script
+      run: cp ./scripts/*.sh ./deploy
+      
+
     - name: Make zip file
       run: zip -r ./planner-api-deploy.zip ./deploy
       shell: bash
@@ -47,3 +57,17 @@ jobs:
 
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./planner-api-deploy.zip s3://planner-api-deploy/
+
+
+      # Deploy
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        aws deploy create-deployment \
+        --application-name planner-api\
+        --deployment-group-name planner-api-group\
+        --file-exists-behavior OVERWRITE \
+        --s3-location bucket=planner-api-deploy,bundleType=zip,key=planner-api-deploy.zip\ 
+        --region ap-northeast-2
