@@ -1,11 +1,12 @@
 spring:
+
   data:
     redis:
       host: 127.0.0.1
       port: 6379
   datasource:
-    url: jdbc:mysql://localhost:3306/example
-    username: root
+    url: jdbc:mysql://database-1.cm0qecrd80me.ap-southeast-2.rds.amazonaws.com:3306/example
+    username: kimujae
     password: 5176
   jpa:
     show-sql : true
