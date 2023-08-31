@@ -68,5 +68,5 @@ jobs:
         aws deploy create-deployment \
         --application-name planner-api\
         --deployment-group-name planner-api-group\
-        --s3-location bucket=planner-api-deploy,bundleType=zip,key=planner-api-deploy.zip\ 
+        --s3-location "bucket=planner-api-deploy,bundleType=zip,key=planner-api-deploy.zip"\ 
         --region ap-northeast-2
