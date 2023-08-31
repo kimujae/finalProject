@@ -4,6 +4,7 @@ import com.kujproject.kuj.dto.board.BoardRespDto;
 import com.kujproject.kuj.dto.user.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserService {
@@ -18,4 +19,5 @@ public interface UserService {
     boolean existByUserId(String userId);
     boolean existByEmail(String email);
     boolean existByPhoneNum(String phoneNum);
+    Optional<AuthDto> login(String userId);
 }

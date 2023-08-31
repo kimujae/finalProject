@@ -156,4 +156,16 @@ public class UserServiceImpl implements UserService{
         boolean isExistByPhoneNum = userDao.existsByPhoneNum(phoneNum);
         return isExistByPhoneNum;
     }
+
+    @Override
+    public Optional<AuthDto> login(String userId) {
+        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
+        UserEntity user =  userEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
+
+        return Optional.ofNullable(AuthDto.builder()
+                .userName(user.getUserName())
+                .userId(user.getUserId())
+                .userPassword(user.getPassword()).build());
+    }
 }
