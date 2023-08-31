@@ -46,4 +46,4 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./planner-api-deploy.zip s3://$planner-api-deploy/
+      run: aws s3 cp --region ap-northeast-2 ./planner-api-deploy.zip s3://planner-api-deploy/
