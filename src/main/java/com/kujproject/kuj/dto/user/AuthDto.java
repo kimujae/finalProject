@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Hidden
 public class AuthDto {
     private String userName;
     private String password;

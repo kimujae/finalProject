@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateCardDescDto {
     @Size(max = 3000, message = "3000자를 초과하여 입력할 수 없습니다.")
     private String description;

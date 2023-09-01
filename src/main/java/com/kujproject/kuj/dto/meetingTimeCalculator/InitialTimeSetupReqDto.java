@@ -7,13 +7,14 @@ import lombok.*;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@ExistUserCheckValidator(board = "boardId", users = "users", message = "모시모시")
+@ExistUserCheckValidator(board = "boardId", users = "users")
 public class InitialTimeSetupReqDto {
-    List<@Valid Days> days;
-    List<@Valid Times> times;
-    List<@Valid TargetTime> targetTimes;
-    List<@Valid User> users;
-    Long boardId;
+    private List<@Valid Days> days;
+    private List<@Valid Times> times;
+    private List<@Valid TargetTime> targetTimes;
+    private List<@Valid User> users;
+    private Long boardId;
 }

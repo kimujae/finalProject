@@ -12,15 +12,15 @@ import lombok.*;
 public class TimeSetup_UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long timeSetupUserId;
+    private Long timeSetupUserId;
     private int invitedUsersCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    UserEntity user;
+    private UserEntity user;
     @ManyToOne
     @JoinColumn(name = "time_setup_id")
-    TimeSetupEntity timeSetup;
+    private TimeSetupEntity timeSetup;
 
     public static TimeSetup_UserEntity convertedBy(int invitedUsersCount, UserEntity user, TimeSetupEntity timeSetup) {
         return TimeSetup_UserEntity.builder()

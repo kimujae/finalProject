@@ -18,7 +18,6 @@ import lombok.Getter;
 
 @Getter
 @EqualsFieldValidator(field1 = "password", field2 = "checkPassword", message = "비밀번호가 일치하지 않습니다.")
-@Hidden
 public class SignUpReqDto {
     @Column(unique = true)
     @NotEmpty(message = UserConstraint.USERID_NOTEMPTY_MSG)

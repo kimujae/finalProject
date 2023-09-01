@@ -10,7 +10,6 @@ import lombok.Setter;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
-@Hidden
 public class UpdateBoardPubRangeDto {
     @NotEmpty
     private boolean isPublic;

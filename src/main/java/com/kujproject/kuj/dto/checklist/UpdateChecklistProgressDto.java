@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateChecklistProgressDto {
     @NotEmpty
     private int progress;

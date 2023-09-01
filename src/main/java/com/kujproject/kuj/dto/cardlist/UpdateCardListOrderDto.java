@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateCardListOrderDto {
     @NotEmpty
     private int cardlistOrder;

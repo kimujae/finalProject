@@ -14,7 +14,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 @EqualsFieldValidator(field1 = "password", field2 = "checkPassword", message = "비밀번호가 일치하지 않습니다.")
 public class UpdatePasswordDto {
     @NotEmpty(message = UserConstraint.PWD_NOTEMPTY_MSG)

@@ -11,10 +11,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-@Hidden
 public class CommentRespDto {
-    String content;
-    String userId; //세션정보로 fix
+    private String content;
+    private String userId; //세션정보로 fix
 
     public static CommentRespDto convertedBy(CommentEntity comment, String userId) {
         return CommentRespDto.builder()

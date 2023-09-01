@@ -12,10 +12,9 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-@Hidden
 public class CreateCommentReqDto {
     @NotEmpty
     @Size(max = 200, message = "댓글 내용은 200자를 초과할 수 없습니다.")
-    String content;
-    String userId; //session정보로 리팩토링
+    private String content;
+    private String userId; //session정보로 리팩토링
 }

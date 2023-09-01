@@ -16,7 +16,6 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @Builder
-@Hidden
 public class CardRespDto {
     private String title;
     private String description;

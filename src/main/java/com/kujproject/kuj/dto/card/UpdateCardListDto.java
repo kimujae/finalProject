@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateCardListDto {
     private Long listId;
 }

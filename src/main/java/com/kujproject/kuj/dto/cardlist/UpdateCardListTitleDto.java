@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateCardListTitleDto {
     @NotEmpty
     @Size(max = 15, message = "")

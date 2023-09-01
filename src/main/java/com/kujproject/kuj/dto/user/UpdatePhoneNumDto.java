@@ -14,7 +14,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdatePhoneNumDto {
     @Column(unique = true)
     @NotEmpty(message = UserConstraint.PHONENUM_NOTEMPTY_MSG)

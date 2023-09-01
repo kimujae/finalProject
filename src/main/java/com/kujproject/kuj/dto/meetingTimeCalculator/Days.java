@@ -12,5 +12,5 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 public class Days {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    String day;
+    private String day;
 }

@@ -12,9 +12,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class TimeSetupRespDto {
-    String times;
-    String days;
-    String targetTimes;
+    private String times;
+    private String days;
+    private String targetTimes;
 
 
     public static TimeSetupRespDto convertedBy(TimeSetupEntity meetingTimeEntity) throws JsonProcessingException {

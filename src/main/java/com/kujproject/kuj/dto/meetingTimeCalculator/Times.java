@@ -14,9 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Times {
     @DateTimeFormat(pattern = "HH:mm")
     @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$", message = "알맞은 시간 형식을 입력해주세요.")
-    String startTime;
+    private String startTime;
 
     @DateTimeFormat(pattern = "HH:mm")
     @Pattern(regexp = "^(?:[01]\\d|2[0-3]):[0-5]\\d$",  message = "알맞은 시간 형식을 입력해주세요.")
-    String endTime;
+    private String endTime;
 }

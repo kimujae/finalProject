@@ -8,8 +8,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
-
 public class UpdateCompletedReqDto {
     private boolean isCompleted;
 }
