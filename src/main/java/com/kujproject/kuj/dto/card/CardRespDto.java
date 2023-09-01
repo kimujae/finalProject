@@ -13,17 +13,17 @@ import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
-@Builder(builderMethodName = "builder")
+@Builder
 public class CardRespDto {
-    String title;
-    String description;
-    String label;
-    String cover;
-    int cardOrder;
-    String uploadFileName;
-    String downloadFilePath;
-    LocalDate startdate;
-    LocalDate duedate;
+    private String title;
+    private String description;
+    private String label;
+    private String cover;
+    private int cardOrder;
+    private String uploadFileName;
+    private String downloadFilePath;
+    private LocalDate startdate;
+    private LocalDate duedate;
 
     public static CardRespDto convertedBy(CardEntity cardEntity, String downloadFilePath) {
         return CardRespDto.builder()

@@ -25,7 +25,7 @@ public interface CardService {
     UpdateCardTitleDto updateTitle(UpdateCardTitleDto updateCardTitleDto, Long cardId);
     UpdateCardDateDto updateDate(UpdateCardDateDto updateCardDateDto, Long cardId);
     void updateFile(UpdateCardFilePathDto updateCardFilePathDto, Long cardId) throws IOException;
-    UpdateCardListDto updateListId(UpdateCardListDto updateCardListDto, Long cardId);
+    UpdateCardListDto updateCardlistId(UpdateCardListDto updateCardListDto, Long cardId);
     void deleteCardById(Long cardId);
     List<CardRespDto> findAllCardByListId(Long listId);
     CardRespDto findCardByCardId(Long cardId) throws IOException;

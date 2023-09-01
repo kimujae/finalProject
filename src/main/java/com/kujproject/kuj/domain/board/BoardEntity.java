@@ -1,7 +1,7 @@
 package com.kujproject.kuj.domain.board;
 
 import com.kujproject.kuj.domain.board_user.BoardAndUserEntity;
-import com.kujproject.kuj.domain.list.ListEntity;
+import com.kujproject.kuj.domain.cardlist.CardListEntity;
 import com.kujproject.kuj.dto.board.CreateBoardReqDto;
 import com.kujproject.kuj.dto.board.UpdateBoardCoverDto;
 import com.kujproject.kuj.dto.board.UpdateBoardPubRangeDto;
@@ -32,7 +32,7 @@ public class BoardEntity{
 
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    List<ListEntity> cardLists = new ArrayList<>();
+    List<CardListEntity> cardLists = new ArrayList<>();
 
     public void changeTitle(UpdateBoardTitleDto updateBoardTitleDto) {
         this.title = updateBoardTitleDto.getTitle();

@@ -1,10 +1,9 @@
 package com.kujproject.kuj.domain.card;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.kujproject.kuj.domain.cardlist.CardListEntity;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.comment.CommentEntity;
-import com.kujproject.kuj.domain.list.ListEntity;
-import com.kujproject.kuj.dto.board.CreateBoardReqDto;
 import com.kujproject.kuj.dto.card.*;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,37 +16,37 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder(builderMethodName = "builder")
+@Builder
 @Table(name = "card")
 public class CardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long cardId;
-    String title;
+    private Long cardId;
+    private String title;
     @Lob
-    String description;
-    String label;
-    String cover;
+    private String description;
+    private String label;
+    private String cover;
     @Column(unique = true)
-    int cardOrder;
-    String storedFileName;
-    String uploadFileName;
-    LocalDate startdate;
-    LocalDate duedate;
+    private int cardOrder;
+    private String storedFileName;
+    private String uploadFileName;
+    private LocalDate startdate;
+    private LocalDate duedate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "list_id")
+    @JoinColumn(name = "cardlist_id")
     @JsonManagedReference
-    ListEntity list;
+    private CardListEntity cardlist;
 
     @OneToMany (mappedBy = "card", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    List<ChecklistEntity> checklist;
+    private List<ChecklistEntity> checklist;
 
 
     @OneToMany (mappedBy = "card", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    List<CommentEntity> comment;
+    private List<CommentEntity> comment;
 
     public void changeTitle(UpdateCardTitleDto updateCardTitleDto) {
         this.title = updateCardTitleDto.getTitle();
@@ -74,8 +73,8 @@ public class CardEntity {
         this.startdate = updateCardDateDto.getStartdate();
     }
 
-    public void changeList(ListEntity list) {
-        this.list = list;
+    public void changeList(CardListEntity cardlist) {
+        this.cardlist = cardlist;
     }
     public void changeUploadFileName(String uploadFileName) {
         this.uploadFileName = uploadFileName;
@@ -85,10 +84,10 @@ public class CardEntity {
         this.storedFileName = storedFileName;
     }
 
-    public static CardEntity convertedBy(CreateCardReqDto createCardReqDto, ListEntity list) {
+    public static CardEntity convertedBy(CreateCardReqDto createCardReqDto, CardListEntity cardlist) {
         return CardEntity.builder()
                 .title(createCardReqDto.getTitle())
-                .list(list)
+                .cardlist(cardlist)
                 .build();
     }
 }
