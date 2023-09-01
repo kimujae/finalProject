@@ -1,9 +1,12 @@
 package com.kujproject.kuj.dto.board;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter(AccessLevel.PROTECTED)
 public class BoardListRespDto {
-    Long boardId;
-    String boardName;
+    private Long boardId;
+    private String boardName;
 }

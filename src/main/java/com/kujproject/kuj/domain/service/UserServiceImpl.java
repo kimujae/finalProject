@@ -1,6 +1,6 @@
 package com.kujproject.kuj.domain.service;
 
-import com.kujproject.kuj.domain.board_user.Board_UserEntity;
+import com.kujproject.kuj.domain.board_user.BoardAndUserEntity;
 import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.domain.repository.UserDao;
 import com.kujproject.kuj.dto.board.BoardRespDto;
@@ -36,22 +36,6 @@ public class UserServiceImpl implements UserService{
 
        UserRespDto userRespDto = UserRespDto.convertedBy(user).build();
        return userRespDto;
-    }
-
-
-    @Override
-    public List<BoardRespDto> findUsersBoard(String userId) {
-
-        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
-        UserEntity user =  userEntity.orElseThrow(() ->
-                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
-
-        List<BoardRespDto> boards = new ArrayList<>();
-        for(Board_UserEntity board : user.getBoards()) {
-            BoardRespDto boardRespDto = BoardRespDto.convertedBy(board.getBoard()).build();
-            boards.add(boardRespDto);
-        }
-        return boards;
     }
 
 
