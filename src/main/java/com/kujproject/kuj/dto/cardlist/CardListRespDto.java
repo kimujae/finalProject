@@ -11,7 +11,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-@Hidden
 public class CardListRespDto {
     private String title;
     private int cardlistOrder;

@@ -9,7 +9,6 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-@Hidden
 public class SigninRespDto {
     private String userId;
     private String token;

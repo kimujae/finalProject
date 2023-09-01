@@ -12,7 +12,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-@Hidden
 public class CreateCardReqDto {
     @NotEmpty
     private String title;

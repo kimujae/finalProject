@@ -10,7 +10,6 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-@Hidden
 public class BoardRespDto {
     private String boardTitle;
     private String cover;

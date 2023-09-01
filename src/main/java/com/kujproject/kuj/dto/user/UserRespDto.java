@@ -10,7 +10,6 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-@Hidden
 public class UserRespDto {
     private String userId;
     private String userName;

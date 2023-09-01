@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @Builder
-@Hidden
 public class CheckRespDto {
     private String title;
     private boolean isCompleted;

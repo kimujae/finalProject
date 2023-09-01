@@ -12,7 +12,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateProfileDto {
     @NotEmpty(message = UserConstraint.USERNAME_NOTEMPTY_MSG)
     @Size(max = 20, message = UserConstraint.USERNAME_SIZEMAX_MSG)

@@ -21,13 +21,13 @@ import java.util.List;
 public class TimeSetupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long timeSetupId;
+    private Long timeSetupId;
     @Column(columnDefinition = "TEXT")
-    String days;
+    private String days;
     @Column(columnDefinition = "TEXT")
-    String times;
+    private String times;
     @Column(columnDefinition = "TEXT")
-    String targetTimes;
+    private String targetTimes;
 
 
     @OneToMany

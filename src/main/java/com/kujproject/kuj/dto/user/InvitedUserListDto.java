@@ -9,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Hidden
 public class InvitedUserListDto {
     List<String> users;
 }

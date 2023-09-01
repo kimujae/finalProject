@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class CreateCardListReqDto {
     @NotEmpty
     @Size(max = 15, message = "카드리스트 제목은 15자를 초과할 수 없습니다.")

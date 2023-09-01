@@ -12,7 +12,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-@Hidden
 public class ChecklistRespDto {
     private String title;
     private int progress;

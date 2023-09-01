@@ -11,21 +11,21 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder(builderMethodName = "builder")
+@Builder
 @Table(name = "comment")
 public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long commentId;
-    String content;
+    private Long commentId;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "card_id")
-    CardEntity card;
+    private CardEntity card;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    UserEntity user;
+    private UserEntity user;
 
 
     public void changeContent(UpdateContentReqDto updateContentReqDto) {

@@ -15,7 +15,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateEmailDto {
     @Column(unique = true)
     @Email(message = UserConstraint.EMAIL)

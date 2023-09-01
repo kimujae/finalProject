@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@Hidden
 public class UpdateCardFilePathDto {
     private MultipartFile attachment;
 }
