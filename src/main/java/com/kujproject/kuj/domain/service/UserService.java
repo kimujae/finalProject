@@ -8,7 +8,6 @@ import java.util.Optional;
 
 
 public interface UserService {
-    UserRespDto signUp(SignUpReqDto signUpReqDto);
     UserRespDto findUserById(String id);
     List<BoardRespDto> findUsersBoard(String id);
     List<UserRespDto> findAllUser();
@@ -19,5 +18,4 @@ public interface UserService {
     boolean existByUserId(String userId);
     boolean existByEmail(String email);
     boolean existByPhoneNum(String phoneNum);
-    Optional<AuthDto> login(String userId);
 }

@@ -4,49 +4,48 @@ import com.kujproject.kuj.domain.service.UserService;
 import com.kujproject.kuj.dto.user.*;
 import com.kujproject.kuj.web.common.code.SuccessCode;
 import com.kujproject.kuj.web.common.response.ApiResponse;
-import com.kujproject.kuj.web.common.utils.TokenUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
 
 @RestController
+@RequiredArgsConstructor
+@Tag(name = "USER", description = "USER CRUD API입니다.")
 public class UserController {
     private final UserService userService;
 
-    //자동 주입(spring 4.3 < ver)
-    public UserController(UserService userService, PasswordEncoder passwordEncoder){
-        this.userService = userService;
-    }
-    
-    @PostMapping("/user")
-    public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
 
-        UserRespDto userRespDto = userService.signUp(signUpReqDto);
-        return new ResponseEntity<>(ApiResponse.builder()
-                .result(userRespDto)
-                .successCode(SuccessCode.INSERT_SUCCESS)
-                .build(), HttpStatus.CREATED);
-    }
+    @Operation(summary = "User조회", description = "userId로 User를 조회합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 조회 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse> findUserById(@PathVariable String userId) {
 
-
-    @GetMapping("/user")
-    public ResponseEntity<ApiResponse> findUserById() {
-
-        String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        //System.out.println(id);
-        UserRespDto foundUser = userService.findUserById(id);
+        UserRespDto foundUser = userService.findUserById(userId);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(foundUser)
                 .successCode(SuccessCode.INSERT_SUCCESS)
                 .build(), HttpStatus.OK);
     }
 
-    @PatchMapping("/user/{id}/email")
+
+    @Operation(summary = "User 정보 업데이트", description = "userId를 가진 User의 이메일을 수정합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 이메일 업데이트 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PatchMapping("/user/{userId}/email")
     public ResponseEntity<ApiResponse> updateEmail(@PathVariable String id,
                                          @Valid @RequestBody UpdateEmailDto updateEmailDto) {
 
@@ -57,7 +56,13 @@ public class UserController {
                 .build(), HttpStatus.OK);
     }
 
-    @PatchMapping("/user/{id}/passwd")
+    @Operation(summary = "User 정보 업데이트", description = "userId를 가진 User의 비밀번호를 수정합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 비밀번호 업데이트 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PatchMapping("/user/{userId}/passwd")
     public ResponseEntity<ApiResponse> updatePassword(@PathVariable String id,
                                          @Valid @RequestBody UpdatePasswordDto updatePasswordDto) {
 
@@ -68,7 +73,13 @@ public class UserController {
                 .build(), HttpStatus.OK);
     }
 
-    @PatchMapping("/user/{id}/profile")
+    @Operation(summary = "User 정보 업데이트", description = "userId를 가진 User의 프로필을 수정합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저 프로필 업데이트 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PatchMapping("/user/{userId}/profile")
     public ResponseEntity<ApiResponse> updateProfile(@PathVariable String id,
                                            @Valid @RequestBody UpdateProfileDto updateProfileDto) {
 
@@ -80,7 +91,13 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/user/{id}")
+    @Operation(summary = "User 삭제", description = "userId를 가진 User를 삭제합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "204", description = "유저 삭제 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @DeleteMapping("/user/{userId}")
     public ResponseEntity<ApiResponse> deleteUserById(@PathVariable String id) {
 
         userService.deleteUser(id);
@@ -89,4 +106,5 @@ public class UserController {
                 .successCode(SuccessCode.DELETE_SUCCESS)
                 .build(), HttpStatus.NO_CONTENT);
     }
+
 }
