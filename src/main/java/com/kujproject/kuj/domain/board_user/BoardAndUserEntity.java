@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name ="board_user")
-public class Board_UserEntity {
+public class BoardAndUserEntity {
     @Id
     Long id;
 

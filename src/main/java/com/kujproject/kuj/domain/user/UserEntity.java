@@ -1,7 +1,7 @@
 package com.kujproject.kuj.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.kujproject.kuj.domain.board_user.Board_UserEntity;
+import com.kujproject.kuj.domain.board_user.BoardAndUserEntity;
 import com.kujproject.kuj.dto.user.*;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +27,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    private List<Board_UserEntity> boards = new ArrayList<>();
+    private List<BoardAndUserEntity> boards = new ArrayList<>();
 
     public void changePassword(UpdatePasswordDto updatePasswordDto) {
         this.password = updatePasswordDto.getPassword();

@@ -1,6 +1,6 @@
 package com.kujproject.kuj.domain.board;
 
-import com.kujproject.kuj.domain.board_user.Board_UserEntity;
+import com.kujproject.kuj.domain.board_user.BoardAndUserEntity;
 import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.dto.board.CreateBoardReqDto;
 import com.kujproject.kuj.dto.board.UpdateBoardCoverDto;
@@ -18,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder(builderMethodName = "Builder")
+@Builder
 public class BoardEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +27,12 @@ public class BoardEntity{
     private String cover;
     private boolean isPublic;
 
-//     member , list, starred 와 연관관계 선언
     @OneToMany(mappedBy = "board" , cascade = CascadeType.REMOVE)
-    //@JsonManagedReference
-    Set<Board_UserEntity> users = new HashSet<>();
+    Set<BoardAndUserEntity> users = new HashSet<>();
 
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    //@JsonManagedReference
-    List<ListEntity> lists = new ArrayList<>();
+    List<ListEntity> cardLists = new ArrayList<>();
 
     public void changeTitle(UpdateBoardTitleDto updateBoardTitleDto) {
         this.title = updateBoardTitleDto.getTitle();
@@ -51,7 +48,7 @@ public class BoardEntity{
 
 
     public static BoardEntity convertedBy(CreateBoardReqDto createBoardReqDto) {
-        return BoardEntity.Builder()
+        return BoardEntity.builder()
                 .title(createBoardReqDto.getTitle())
                 .cover(createBoardReqDto.getCover())
                 .isPublic(createBoardReqDto.isPublic())

@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface UserService {
     UserRespDto findUserById(String id);
-    List<BoardRespDto> findUsersBoard(String id);
     List<UserRespDto> findAllUser();
     UpdateProfileDto updateUserProfile(String userId, UpdateProfileDto updateProfileDto);
     UpdateEmailDto updateEmail(String userId, UpdateEmailDto updateEmailDto);

@@ -1,7 +1,7 @@
 package com.kujproject.kuj.validation.meetingTimeCalculator;
 
 import com.kujproject.kuj.domain.board.BoardEntity;
-import com.kujproject.kuj.domain.board_user.Board_UserEntity;
+import com.kujproject.kuj.domain.board_user.BoardAndUserEntity;
 import com.kujproject.kuj.domain.repository.BoardDao;
 import com.kujproject.kuj.dto.meetingTimeCalculator.User;
 import com.kujproject.kuj.web.common.code.ErrorCode;
@@ -50,11 +50,11 @@ public class UserCheckValidator implements ConstraintValidator<ExistUserCheckVal
             BoardEntity board = boardEntity.orElseThrow(()->
                     new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
 
-            Set<Board_UserEntity> foundUsers = board.getUsers();
+            Set<BoardAndUserEntity> foundUsers = board.getUsers();
 
 
             for(User user : fieldValue2) {
-                for(Board_UserEntity userEntity : foundUsers) {
+                for(BoardAndUserEntity userEntity : foundUsers) {
                     if(userEntity.getUser().getUserId().equals(user.getUserId())) continue;
 
                     return false;

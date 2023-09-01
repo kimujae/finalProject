@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder(builderMethodName = "builder")
+@Builder
 @Getter
 @AllArgsConstructor
 public class BoardRespDto {
-    String boardTitle;
-    String cover;
-    boolean isPublic;
+    private String boardTitle;
+    private String cover;
+    private boolean isPublic;
 
     public static BoardRespDtoBuilder convertedBy(BoardEntity boardEntity) {
         return BoardRespDto.builder()
