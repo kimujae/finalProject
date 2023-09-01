@@ -16,18 +16,18 @@ import java.util.Arrays;
 public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
-        SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER).name("Authorization");
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
+            SecurityScheme securityScheme = new SecurityScheme()
+                    .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
+                    .in(SecurityScheme.In.HEADER).name("Authorization");
+            SecurityRequirement securityRequirement = new SecurityRequirement().addList("JWT_TOKEN");
 
-        Info info = new Info()
-                .title("Planner Application REST API")
-                .version("v0.0.1")
-                .description("Planner Application [@kimujae]의 API 명세서입니다.");
-        return new OpenAPI()
-                .components(new Components().addSecuritySchemes("JWT_TOKEN", securityScheme))
-                .security(Arrays.asList(securityRequirement))
-                .info(info);
+            Info info = new Info()
+                    .title("Planner Application REST API")
+                    .version("v0.0.1")
+                    .description("Planner Application [@kimujae]의 API 명세서입니다.");
+            return new OpenAPI()
+                    .addSecurityItem(securityRequirement)
+                    .components(new Components().addSecuritySchemes("JWT_TOKEN", securityScheme))
+                    .info(info);
     }
 }
