@@ -3,6 +3,7 @@ package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.BoardService;
 import com.kujproject.kuj.dto.board.*;
+import com.kujproject.kuj.dto.user.InvitedUserListDto;
 import com.kujproject.kuj.dto.user.UserRespDto;
 import com.kujproject.kuj.web.common.code.SuccessCode;
 import com.kujproject.kuj.web.common.response.ApiResponse;
@@ -93,6 +94,22 @@ public class BoardController {
                 .build(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Board 정보 추가", description = "BoardId를 가진 Board에 유저들을 초대(추가)합니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "보드 유저 추가 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @PostMapping("board/{boardId}/users")
+    public ResponseEntity<ApiResponse> inviteUser(@PathVariable Long boardId,
+                                                  InvitedUserListDto invitedUserListDto) {
+
+        boardService.inviteMember(boardId, invitedUserListDto);
+        return new ResponseEntity<>(ApiResponse.builder()
+                .result(invitedUserListDto)
+                .successCode(SuccessCode.INSERT_SUCCESS)
+                .build(), HttpStatus.OK);
+    }
 
     @Operation(summary = "Board 정보 수정", description = "BoardId를 가진 Board의 제목을 수정합니다.")
     @ApiResponses({
@@ -146,7 +163,7 @@ public class BoardController {
     }
 
 
-    @Operation(summary = "Board 목록 조회", description = "userId를 가진 User의 모든 보드 목록을 조회합니다.")
+    @Operation(summary = "User의 모든 Board 목록 조회", description = "userId를 가진 User의 모든 보드 목록을 조회합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "유저의 보드 목록 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근"),

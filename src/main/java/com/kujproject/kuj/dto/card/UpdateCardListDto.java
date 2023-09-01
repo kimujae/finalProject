@@ -1,8 +1,10 @@
 package com.kujproject.kuj.dto.card;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class UpdateCardListDto {
-    Long listId;
+    private Long listId;
 }

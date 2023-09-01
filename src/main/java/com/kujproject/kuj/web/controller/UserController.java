@@ -46,10 +46,10 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PatchMapping("/user/{userId}/email")
-    public ResponseEntity<ApiResponse> updateEmail(@PathVariable String id,
+    public ResponseEntity<ApiResponse> updateEmail(@PathVariable String userId,
                                          @Valid @RequestBody UpdateEmailDto updateEmailDto) {
 
-        updateEmailDto = userService.updateEmail(id, updateEmailDto);
+        updateEmailDto = userService.updateEmail(userId, updateEmailDto);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(updateEmailDto)
                 .successCode(SuccessCode.UPDATE_SUCCESS)
@@ -63,10 +63,10 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PatchMapping("/user/{userId}/passwd")
-    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String id,
+    public ResponseEntity<ApiResponse> updatePassword(@PathVariable String userId,
                                          @Valid @RequestBody UpdatePasswordDto updatePasswordDto) {
 
-        userService.updatePassword(id, updatePasswordDto);
+        userService.updatePassword(userId, updatePasswordDto);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result("비밀번호가 성공적으로 수정되었습니다.")
                 .successCode(SuccessCode.UPDATE_SUCCESS)
@@ -80,10 +80,10 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PatchMapping("/user/{userId}/profile")
-    public ResponseEntity<ApiResponse> updateProfile(@PathVariable String id,
+    public ResponseEntity<ApiResponse> updateProfile(@PathVariable String userId,
                                            @Valid @RequestBody UpdateProfileDto updateProfileDto) {
 
-        updateProfileDto = userService.updateUserProfile(id, updateProfileDto);
+        updateProfileDto = userService.updateUserProfile(userId, updateProfileDto);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(updateProfileDto)
                 .successCode(SuccessCode.UPDATE_SUCCESS)
@@ -98,9 +98,9 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @DeleteMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable String userId) {
 
-        userService.deleteUser(id);
+        userService.deleteUser(userId);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(null)
                 .successCode(SuccessCode.DELETE_SUCCESS)

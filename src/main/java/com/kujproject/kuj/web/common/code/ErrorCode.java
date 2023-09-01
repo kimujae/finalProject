@@ -60,7 +60,7 @@ public enum ErrorCode {
     CARD_NOT_FOUND(404, "", "Card Not Found"),
 
 
-    LIST_NOT_FOUND(404, "", "List Not Found"),
+    CARDLIST_NOT_FOUND(404, "", "List Not Found"),
 
 
     CHECKLIST_NOT_FOUND(404, "", "Checklist Not Found"),

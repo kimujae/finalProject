@@ -1,11 +1,11 @@
 package com.kujproject.kuj.domain.service;
 
 import com.kujproject.kuj.domain.card.CardEntity;
+import com.kujproject.kuj.domain.cardlist.CardListEntity;
 import com.kujproject.kuj.domain.checklist.ChecklistEntity;
 import com.kujproject.kuj.domain.comment.CommentEntity;
-import com.kujproject.kuj.domain.list.ListEntity;
 import com.kujproject.kuj.domain.repository.CardDao;
-import com.kujproject.kuj.domain.repository.ListDao;
+import com.kujproject.kuj.domain.repository.CardListDao;
 import com.kujproject.kuj.dto.card.*;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.comment.CommentRespDto;
@@ -13,6 +13,7 @@ import com.kujproject.kuj.web.common.code.ErrorCode;
 import com.kujproject.kuj.web.common.utils.FileManager;
 import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -29,28 +30,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CardServiceImpl implements CardService{
 
     private final CardDao cardDao;
-    private final ListDao listDao;
+    private final CardListDao cardListDao;
     private final FileManager fileManager;
 
 
-    public CardServiceImpl(CardDao cardDao, ListDao listDao, FileManager fileManager) {
-        this.cardDao = cardDao;
-        this.listDao = listDao;
-        this.fileManager = fileManager;
-    }
-
 
     @Override
-    public CardRespDto createCard(CreateCardReqDto createCardReqDto, Long listId) {
-        Optional<ListEntity> listEntity = listDao.findByListId(listId);
-        ListEntity list = listEntity.orElseThrow(() ->
-                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
+    public CardRespDto createCard(CreateCardReqDto createCardReqDto, Long cardlistId) {
+        Optional<CardListEntity> cardlistEntity = cardListDao.findByCardlistId(cardlistId);
+        CardListEntity cardlist = cardlistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARDLIST_NOT_FOUND));
 
 
-        CardEntity card = CardEntity.convertedBy(createCardReqDto, list);
+        CardEntity card = CardEntity.convertedBy(createCardReqDto, cardlist);
         cardDao.save(card);
         return CardRespDto.convertedBy(card);
     }
@@ -144,21 +140,22 @@ public class CardServiceImpl implements CardService{
 
     @Override
     @Transactional
-    public UpdateCardListDto updateListId(UpdateCardListDto updateCardListDto, Long cardId) {
+    public UpdateCardListDto updateCardlistId(UpdateCardListDto updateCardListDto, Long cardId) {
         Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
-        Optional<ListEntity> listEntity = listDao.findByListId(updateCardListDto.getListId());
+        Optional<CardListEntity> cardlistEntity = cardListDao.findByCardlistId(updateCardListDto.getListId());
 
         CardEntity card = cardEntity.orElseThrow(() ->
                 new BusinessExceptionHandler(ErrorCode.CARD_NOT_FOUND));
-        ListEntity list = listEntity.orElseThrow(() ->
-                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
+        CardListEntity cardlist = cardlistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARDLIST_NOT_FOUND));
 
-        card.changeList(list);
+        card.changeList(cardlist);
         cardDao.save(card);
         return updateCardListDto;
     }
 
     @Override
+    @Transactional
     public void deleteCardById(Long cardId) {
         int deletedCount = cardDao.deleteByCardId(cardId);
 
@@ -168,15 +165,15 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public List<CardRespDto> findAllCardByListId(Long listId) {
-        Optional<ListEntity> listEntity = listDao.findByListId(listId);
-        ListEntity list = listEntity.orElseThrow(() ->
-                new BusinessExceptionHandler(ErrorCode.LIST_NOT_FOUND));
+    public List<CardRespDto> findAllCardByListId(Long cardlistId) {
+        Optional<CardListEntity> cardlistEntity = cardListDao.findByCardlistId(cardlistId);
+        CardListEntity cardlist = cardlistEntity.orElseThrow(() ->
+                new BusinessExceptionHandler(ErrorCode.CARDLIST_NOT_FOUND));
 
 
-        List<CardEntity> cardList = cardDao.findAllByList(list);
+        List<CardEntity> cards = cardDao.findAllByCardlist(cardlist);
         List<CardRespDto> cardRespDtoList = new ArrayList<>();
-        for (CardEntity card : cardList) {
+        for (CardEntity card : cards) {
             cardRespDtoList.add(CardRespDto.convertedBy(card));
         }
         return cardRespDtoList;
@@ -225,6 +222,7 @@ public class CardServiceImpl implements CardService{
         return commentRespDtoList;
     }
 
+
     public ResponseEntity<?> downloadCardAttachment(Long cardId) throws IOException {
             Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
             CardEntity card = cardEntity.orElseThrow(() ->
@@ -245,6 +243,7 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    @Transactional
     public void deleteCardAttachment(Long cardId) throws IOException {
         Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
         CardEntity card = cardEntity.orElseThrow(() ->
@@ -263,6 +262,7 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    @Transactional
     public void deleteCardDate(Long cardId) {
         Optional<CardEntity> cardEntity = cardDao.findByCardId(cardId);
         CardEntity card = cardEntity.orElseThrow(() ->

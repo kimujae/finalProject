@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.Getter;
 
 @Getter
-@Builder(builderMethodName = "builder")
+@Builder
 @AllArgsConstructor
 public class CreateCardReqDto {
     @NotEmpty
-    String title;
+    private String title;
 
     public static CreateCardReqDto convertedBy(CardEntity cardEntity) {
         return CreateCardReqDto.builder()
