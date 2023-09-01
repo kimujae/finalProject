@@ -29,26 +29,6 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public UserRespDto signUp(SignUpReqDto signUpReqDto) {
-        //password 인코딩
-        String encodedPassword = passwordEncoder.encode(signUpReqDto.getPassword());
-        signUpReqDto.encodingPasswordBy(encodedPassword);
-        signUpReqDto.initailizeRole("ROLE_USER");
-
-        // SignUpReqDto -> UserEntity 변환
-        UserEntity.UserEntityBuilder userEntityBuilder = UserEntity.builder();
-        UserEntity userEntity = userEntityBuilder.builder(signUpReqDto).build();
-        //userEntity.setRole("ROLE_USER"); // 빌더생성이므로 더티체킹 못함.
-
-        userDao.save(userEntity);
-
-        //UserEntity -> UserRespDto 변환
-        UserRespDto userRespDto = UserRespDto.convertedBy(userEntity).build();
-        return userRespDto;
-    }
-
-
-    @Override
     public UserRespDto findUserById(String userId) {
         Optional<UserEntity> userEntity = userDao.findByUserId(userId);
         UserEntity user =  userEntity.orElseThrow(() ->
@@ -157,15 +137,5 @@ public class UserServiceImpl implements UserService{
         return isExistByPhoneNum;
     }
 
-    @Override
-    public Optional<AuthDto> login(String userId) {
-        Optional<UserEntity> userEntity = userDao.findByUserId(userId);
-        UserEntity user =  userEntity.orElseThrow(() ->
-                new BusinessExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
-        return Optional.ofNullable(AuthDto.builder()
-                .userName(user.getUserName())
-                .userId(user.getUserId())
-                .userPassword(user.getPassword()).build());
-    }
 }

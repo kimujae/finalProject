@@ -12,7 +12,7 @@ import java.util.List;
 @Entity(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder(builderClassName = "UserEntityBuilder")
+@Builder
 @Getter
 public class UserEntity {
     @Id
@@ -49,15 +49,13 @@ public class UserEntity {
         this.role = role;
     }
 
-    public static class UserEntityBuilder {
-        public UserEntityBuilder builder(SignUpReqDto signUpReqDto) {
-            return UserEntity.builder()
-                    .userId(signUpReqDto.getUserId())
-                    .password(signUpReqDto.getPassword())
-                    .userName(signUpReqDto.getUserName())
-                    .email(signUpReqDto.getEmail())
-                    .phoneNum(signUpReqDto.getPhoneNum())
-                    .role(signUpReqDto.getRole());
-        }
+    public static UserEntity convertedBy(SignUpReqDto signUpReqDto) {
+        return UserEntity.builder()
+                .userId(signUpReqDto.getUserId())
+                .password(signUpReqDto.getPassword())
+                .userName(signUpReqDto.getUserName())
+                .email(signUpReqDto.getEmail())
+                .phoneNum(signUpReqDto.getPhoneNum())
+                .build();
     }
 }

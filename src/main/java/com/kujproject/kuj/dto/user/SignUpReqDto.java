@@ -49,7 +49,7 @@ public class SignUpReqDto {
     @PhoneNumDupCheckValidator
     private String phoneNum;
 
-    private String role;
+
 
     @Builder
     public SignUpReqDto(String userId, String password, String checkPassword, String userName, String email, String phoneNum) {
@@ -61,9 +61,6 @@ public class SignUpReqDto {
         this.phoneNum = phoneNum;
     }
 
-    public void initailizeRole(String role) {
-        this.role = role;
-    }
 
     public void encodingPasswordBy(String encodedPassword) {
         this.password = encodedPassword;

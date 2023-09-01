@@ -1,7 +1,6 @@
 package com.kujproject.kuj.dto.user;
 
-
-import jakarta.persistence.Id;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 
 @Getter
@@ -9,7 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AuthDto {
-    private String userId;
-    private String userPassword;
     private String userName;
+    private String password;
+    @Null
+    private String role;
 }

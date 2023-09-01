@@ -55,7 +55,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             "/swagger/**",
             "/swagger-ui/**",
             "/swagger-ui**",
-            "/generateToken"
+            "/generateToken",
+            "/login",
+            "/signup"
     ));
 
     @Override
@@ -94,7 +96,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // [STEP5] 사용자 아이디가 존재하는지 여부 체크
                     if (userId != null && !userId.equalsIgnoreCase("")) {
                         SecurityContextHolder.getContext().setAuthentication(TokenUtils.createAuthenticationFromJwt(token));
-                        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
                         chain.doFilter(request, response);
                     } else {
                         throw new BusinessExceptionHandler(ErrorCode.BUSINESS_EXCEPTION_ERROR); // "TOKEN isn't userId",
