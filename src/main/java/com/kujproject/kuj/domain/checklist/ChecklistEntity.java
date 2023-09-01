@@ -15,23 +15,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder(builderMethodName = "builder")
+@Builder
 @Table(name = "checklist")
 public class ChecklistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long checklistId;
-    String title;
-    int progress;
+    private Long checklistId;
+    private String title;
+    private int progress;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     @JsonManagedReference
-    CardEntity card;
+    private CardEntity card;
 
     @OneToMany(mappedBy = "checklist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    List<TodoCheckEntity> check;
+    private List<TodoCheckEntity> check;
 
     public void changeTitle(UpdateChecklistTitleDto updateChecklistTitleDto) {
         this.title = updateChecklistTitleDto.getTitle();

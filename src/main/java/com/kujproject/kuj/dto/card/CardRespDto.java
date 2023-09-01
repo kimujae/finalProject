@@ -3,6 +3,8 @@ package com.kujproject.kuj.dto.card;
 import com.kujproject.kuj.domain.card.CardEntity;
 import com.kujproject.kuj.dto.checklist.ChecklistRespDto;
 import com.kujproject.kuj.dto.comment.CommentRespDto;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @Builder
+@Hidden
 public class CardRespDto {
     private String title;
     private String description;

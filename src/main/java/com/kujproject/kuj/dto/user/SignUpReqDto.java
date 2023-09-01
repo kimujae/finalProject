@@ -5,6 +5,8 @@ import com.kujproject.kuj.validation.user.EmailDupCheckValidator;
 import com.kujproject.kuj.validation.user.EqualsFieldValidator;
 import com.kujproject.kuj.validation.user.IdDupCheckValidator;
 import com.kujproject.kuj.validation.user.PhoneNumDupCheckValidator;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,6 +18,7 @@ import lombok.Getter;
 
 @Getter
 @EqualsFieldValidator(field1 = "password", field2 = "checkPassword", message = "비밀번호가 일치하지 않습니다.")
+@Hidden
 public class SignUpReqDto {
     @Column(unique = true)
     @NotEmpty(message = UserConstraint.USERID_NOTEMPTY_MSG)

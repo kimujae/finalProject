@@ -1,13 +1,16 @@
 package com.kujproject.kuj.dto.user;
 
 import com.kujproject.kuj.domain.user.UserEntity;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder(builderMethodName = "builder")
+@Builder
 @Getter
 @AllArgsConstructor
+@Hidden
 public class UserRespDto {
     private String userId;
     private String userName;

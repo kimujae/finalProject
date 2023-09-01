@@ -27,13 +27,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * 지정한 URL 별 JWT 유효성 검증을 수행하며 직접적인 사용자 '인증'을 확인합니다.
- *
- * @author lee
- * @fileName JwtAuthorizationFilter
- * @since 2022.12.23
- */
+
 @Slf4j
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -121,12 +115,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    /**
-     * 토큰 관련 Exception 발생 시 예외 응답값 구성
-     *
-     * @param e Exception
-     * @return JSONObject
-     */
     private JSONObject jsonResponseWrapper(Exception e) {
 
         String resultMsg = "";
