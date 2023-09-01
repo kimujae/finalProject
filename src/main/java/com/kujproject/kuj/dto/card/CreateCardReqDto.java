@@ -1,6 +1,8 @@
 package com.kujproject.kuj.dto.card;
 
 import com.kujproject.kuj.domain.card.CardEntity;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
+@Hidden
 public class CreateCardReqDto {
     @NotEmpty
     private String title;

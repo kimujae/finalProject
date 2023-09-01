@@ -16,25 +16,25 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder(builderMethodName = "builder")
+@Builder
 @Table(name ="todo_check")
 public class TodoCheckEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long checkId;
-    String title;
-    LocalDate duedate;
-    boolean isCompleted;
+    private Long checkId;
+    private String title;
+    private LocalDate duedate;
+    private boolean isCompleted;
 
     @ManyToOne
     @JoinColumn(name = "checklist_id")
     @JsonManagedReference
-    ChecklistEntity checklist;
+    private ChecklistEntity checklist;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonManagedReference
-    UserEntity user;
+    private UserEntity user;
 
     public void changeTitle(UpdateTitleReqDto updateTitleReqDto) {
         this.title = updateTitleReqDto.getTitle();

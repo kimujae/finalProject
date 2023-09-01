@@ -35,18 +35,14 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(authorize -> authorize.requestMatchers("/resources/**", "/signup", "/login").permitAll())
 
-            // [STEP2] form 기반의 로그인에 대해 비 활성화하며 커스텀으로 구성한 필터를 사용한다.
             .formLogin(AbstractHttpConfigurer::disable)
 
             .httpBasic(AbstractHttpConfigurer::disable)
 
-            // [STEP3] 토큰을 활용하는 경우 모든 요청에 대해 '인가'에 대해서 사용.
             .authorizeHttpRequests((authz) -> authz.anyRequest().permitAll())
 
-            // [STEP4] Spring Security JWT Filter Load
             .addFilterBefore(jwtAuthorizationFilter(), BasicAuthenticationFilter.class)
 
-            // [STEP5] Session 기반의 인증기반을 사용하지 않고 추후 JWT를 이용하여서 인증 예정
             .sessionManagement((sessionManagement) ->
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
@@ -59,11 +55,6 @@ public class SecurityConfig {
     public PasswordEncoder encoder() { return new BCryptPasswordEncoder(); }
 
 
-    /**
-     * 5. 비밀번호를 암호화하기 위한 BCrypt 인코딩을 통하여 비밀번호에 대한 암호화를 수행합니다.
-     *
-     * @return BCryptPasswordEncoder
-     */
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }

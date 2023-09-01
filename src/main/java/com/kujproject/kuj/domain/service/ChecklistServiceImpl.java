@@ -12,6 +12,7 @@ import com.kujproject.kuj.dto.checklist.UpdateChecklistTitleDto;
 import com.kujproject.kuj.dto.todo_check.CheckRespDto;
 import com.kujproject.kuj.web.common.code.ErrorCode;
 import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +22,12 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class ChecklistServiceImpl implements ChecklistService{
 
     private final ChecklistDao checklistDao;
     private final CardDao cardDao;
 
-    public ChecklistServiceImpl(ChecklistDao checklistDao, CardDao cardDao) {
-        this.checklistDao = checklistDao;
-        this.cardDao = cardDao;
-    }
 
     @Override
     public ChecklistRespDto createChecklist(CreateChecklistReqDto createChecklistReqDto, Long cardId) {

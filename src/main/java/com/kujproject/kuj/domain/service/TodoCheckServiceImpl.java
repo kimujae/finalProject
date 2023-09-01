@@ -9,22 +9,18 @@ import com.kujproject.kuj.domain.user.UserEntity;
 import com.kujproject.kuj.dto.todo_check.*;
 import com.kujproject.kuj.web.common.code.ErrorCode;
 import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TodoCheckServiceImpl implements TodoCheckService{
     private final TodoCheckDao todoCheckDao;
     private final ChecklistDao checklistDao;
     private final UserDao userDao;
-
-    public TodoCheckServiceImpl(TodoCheckDao todoCheckDao, ChecklistDao checklistDao, UserDao userDao) {
-        this.todoCheckDao = todoCheckDao;
-        this.checklistDao = checklistDao;
-        this.userDao = userDao;
-    }
 
 
     @Override
