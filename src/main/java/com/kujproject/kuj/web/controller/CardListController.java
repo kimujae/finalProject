@@ -1,10 +1,7 @@
 package com.kujproject.kuj.web.controller;
 
 import com.kujproject.kuj.domain.service.CardListService;
-import com.kujproject.kuj.dto.cardlist.CreateCardListReqDto;
-import com.kujproject.kuj.dto.cardlist.CardListRespDto;
-import com.kujproject.kuj.dto.cardlist.UpdateCardListOrderDto;
-import com.kujproject.kuj.dto.cardlist.UpdateCardListTitleDto;
+import com.kujproject.kuj.dto.cardlist.*;
 import com.kujproject.kuj.web.common.code.SuccessCode;
 import com.kujproject.kuj.web.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +38,8 @@ public class CardListController {
                 .successCode(SuccessCode.INSERT_SUCCESS)
                 .build(), HttpStatus.CREATED);
     }
+
+
     @Operation(summary = "Board의 모든 Cardlists 조회", description = "boardId를 가진 Board에 cardlists를 조회합니다.")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "보드의 모든 카드리스트 조회 성공"),
@@ -49,13 +48,19 @@ public class CardListController {
     })
     @GetMapping("/board/{boardId}/cardlists")
     public ResponseEntity<ApiResponse> findAllCardlistsByBoardId(@PathVariable Long boardId) {
-
-        List<CardListRespDto> listRespDtoCardList = cardListService.findAllCardlistByBoardId(boardId);
+        long startTime = System.nanoTime();
+        CardListRespDtos listRespDtoCardList = cardListService.findAllCardlistByBoardId(boardId);
+        long endTime = System.nanoTime();
+        long executionTime = endTime - startTime;
+        double milliseconds = (double) executionTime / 1_000_000.0;
+        System.out.println("실행 시간: " + milliseconds + " 밀리초");
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(listRespDtoCardList)
                 .successCode(SuccessCode.SELECT_SUCCESS)
                 .build(), HttpStatus.OK);
     }
+
+
 
     @Operation(summary = "Cardlists 조회", description = "cardlistId를 가진 cardlists를 조회합니다.")
     @ApiResponses({
@@ -66,7 +71,7 @@ public class CardListController {
     @GetMapping("/cardlist/{cardlistId}")
     public ResponseEntity<ApiResponse> findCardlistById(@PathVariable Long cardlistId) {
 
-        CardListRespDto cardListRespDto = cardListService.findCardByCardlistID(cardlistId);
+        CardListRespDto cardListRespDto = cardListService.findCardlistByCardlistID(cardlistId);
         return new ResponseEntity<>(ApiResponse.builder()
                 .result(cardListRespDto)
                 .successCode(SuccessCode.SELECT_SUCCESS)

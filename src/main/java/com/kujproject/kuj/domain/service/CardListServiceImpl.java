@@ -4,13 +4,14 @@ import com.kujproject.kuj.domain.board.BoardEntity;
 import com.kujproject.kuj.domain.cardlist.CardListEntity;
 import com.kujproject.kuj.domain.repository.BoardDao;
 import com.kujproject.kuj.domain.repository.CardListDao;
-import com.kujproject.kuj.dto.cardlist.CreateCardListReqDto;
-import com.kujproject.kuj.dto.cardlist.CardListRespDto;
-import com.kujproject.kuj.dto.cardlist.UpdateCardListOrderDto;
-import com.kujproject.kuj.dto.cardlist.UpdateCardListTitleDto;
+import com.kujproject.kuj.dto.cardlist.*;
 import com.kujproject.kuj.web.common.code.ErrorCode;
 import com.kujproject.kuj.web.config.exception.BusinessExceptionHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +21,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CardListServiceImpl implements CardListService {
     private final CardListDao cardListDao;
     private final BoardDao boardDao;
 
 
     @Override
-    public CardListRespDto findCardByCardlistID(Long cardlistId) {
+    public CardListRespDto findCardlistByCardlistID(Long cardlistId) {
         Optional<CardListEntity> cardlistEntity = cardListDao.findByCardlistId(cardlistId);
         CardListEntity cardlist = cardlistEntity.orElseThrow(() ->
                 new BusinessExceptionHandler(ErrorCode.CARDLIST_NOT_FOUND));
@@ -36,7 +38,10 @@ public class CardListServiceImpl implements CardListService {
 
 
     @Override
-    public List<CardListRespDto> findAllCardlistByBoardId(Long boardId) {
+    //@Transactional(readOnly = true)
+    //@Cacheable(key = "#boardId", value = "cache1")
+    public CardListRespDtos findAllCardlistByBoardId(Long boardId) {
+        long startTime = System.nanoTime();
         Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
         BoardEntity board = boardEntity.orElseThrow(() ->
                 new BusinessExceptionHandler(ErrorCode.BOARD_NOT_FOUND));
@@ -44,10 +49,18 @@ public class CardListServiceImpl implements CardListService {
 
         List<CardListEntity> cardlistEntityList = cardListDao.findAllByBoard(board);
         List<CardListRespDto> cardlistRespDtos = new ArrayList<>();
+
         for(CardListEntity cardlists : cardlistEntityList) {
             cardlistRespDtos.add(CardListRespDto.convertedBy(cardlists));
         }
-        return cardlistRespDtos;
+        long endTime = System.nanoTime();
+        long executionTime = endTime - startTime;
+
+        double milliseconds = (double) executionTime / 1_000_000.0;
+        System.out.println("실행 시간: " + milliseconds + " 밀리초");
+        CardListRespDtos cardlist = new CardListRespDtos(cardlistRespDtos);
+
+        return cardlist;
     }
 
 
@@ -56,6 +69,7 @@ public class CardListServiceImpl implements CardListService {
      */
     @Override
     @Transactional
+    @CacheEvict
     public UpdateCardListOrderDto changeCardlistOrder(Long cardlistId, UpdateCardListOrderDto updateCardListOrderDto) {
         Optional<CardListEntity> cardlistEntity = cardListDao.findByCardlistId(cardlistId);
         CardListEntity cardlist = cardlistEntity.orElseThrow(() ->
@@ -69,6 +83,7 @@ public class CardListServiceImpl implements CardListService {
 
     @Override
     @Transactional
+    @CacheEvict
     public UpdateCardListTitleDto updateCardlistTitle(Long cardlistId, UpdateCardListTitleDto updateCardListTitleDto) {
         Optional<CardListEntity> cardlistEntity = cardListDao.findByCardlistId(cardlistId);
         CardListEntity cardlist = cardlistEntity.orElseThrow(() ->
@@ -81,6 +96,7 @@ public class CardListServiceImpl implements CardListService {
 
 
     @Override
+    @CachePut
     public CardListRespDto createCardlist(Long boardId, CreateCardListReqDto createCardListReqDto) {
         Optional<BoardEntity> boardEntity = boardDao.findByBoardId(boardId);
         BoardEntity board = boardEntity.orElseThrow(() ->
@@ -96,6 +112,7 @@ public class CardListServiceImpl implements CardListService {
 
     @Override
     @Transactional
+    @CacheEvict
     public void deleteList(Long cardlistId) {
         int deletedCount = cardListDao.deleteByCardlistId(cardlistId);
 

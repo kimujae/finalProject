@@ -51,7 +51,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             "/swagger-ui**",
             "/generateToken",
             "/login",
-            "/signup"
+            "/signup",
+            "/**"
     ));
 
     @Override
